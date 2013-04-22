@@ -1,5 +1,7 @@
 package main;
 
+import java.io.File;
+
 import objects.GameObject;
 import objects.Player;
 
@@ -8,6 +10,9 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
+import org.newdawn.slick.particles.ConfigurableEmitter;
+import org.newdawn.slick.particles.ParticleIO;
+import org.newdawn.slick.particles.ParticleSystem;
 
 public class Game extends BasicGame{
 	private final Color background = new Color(130,130,130);
@@ -18,6 +23,7 @@ public class Game extends BasicGame{
 	private final float gravity = 0.5f;
 	private final float maxSpeed = 20;
 	
+	
 	int tick = 0;
 	int lastTick = 0;
 	int lastJump = 0;
@@ -27,6 +33,10 @@ public class Game extends BasicGame{
 	public boolean change = false;
 	private GameObject[] objects;
 	private Player p;
+	
+	private ParticleSystem system;
+	ConfigurableEmitter emitter;
+	
 	public Game() {
 		super("Gravimax");
 	}
@@ -47,6 +57,9 @@ public class Game extends BasicGame{
 		
 		xGravity = 0f;
 		yGravity = gravity;
+		
+		Image img = new Image("data/test_particle.png");
+		system = new ParticleSystem(img,1500);
 		
 		objects = new GameObject[20];
 		objects[0] = new GameObject(new Rectangle(50,750,700,50),Color.blue,true);
@@ -72,10 +85,7 @@ public class Game extends BasicGame{
 		
 		p.draw(g);
 		
-		g.drawLine(195, 0, 195, 800);
-		g.drawLine(265, 0, 265, 800);
-		g.drawLine(285, 0, 285, 800);
-		g.drawLine(240, 0, 240, 800);
+		system.render();
 	}
 	
 	
@@ -86,6 +96,25 @@ public class Game extends BasicGame{
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE) && (tick - lastTick > 30 || lastTick == 0)){
 			System.out.println(p.getX()+"/"+p.getY());
 			lastTick = tick;
+			
+			
+			try{
+				File xmlfile = new File("data/test_emitter.xml");
+				emitter = ParticleIO.loadEmitter(xmlfile);
+				emitter.setPosition(p.getX(), p.getY());
+				system.addEmitter(emitter);
+			} catch (Exception e){
+				e.printStackTrace();
+				
+			}
+		}
+//		if(emitter != null){
+//			emitter.setPosition(p.getX(), p.getY());
+//		}
+//		system.setPosition(p.getX(),p.getY());
+		system.update(delta);
+		if(system != null){
+			
 		}
 		
 		// Handle movement
