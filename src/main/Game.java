@@ -75,12 +75,9 @@ public class Game extends BasicGame{
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
 		tick++;
-		//System.out.println(tick + "|" + lastTick);
 		// Print debug output
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE) && (tick - lastTick > 30 || lastTick == 0)){
 			System.out.println(p.getX()+"/"+p.getY());
-//			rotateGravity(gc, 3);
-//			System.out.println("ROTATED!");
 			lastTick = tick;
 		}
 		
@@ -145,17 +142,12 @@ public class Game extends BasicGame{
 						collisionObject2 = obj;
 						dir2 = -1;
 					} else {
-//						System.out.println("Did gravity stuff");
 						yGravity = 0;
 						xGravity = -gravity;
 						collisionObject = obj;
 						dir2 = -1;
 					}
-					
-//					System.out.println("Collided left");
 				} else if(p.getSpeedX() > 0 && p.collideRight(obj) && Math.abs(p.getX() - (obj.getX() + obj.shape.getWidth() * -1)) < 20){ // Player collided with something to the right
-					
-					
 					p.setSpeedX(0);
 					if(xGravity > 0){
 						p.setJumping(false);
