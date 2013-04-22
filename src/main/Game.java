@@ -10,7 +10,7 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 
 public class Game extends BasicGame{
-	private final Color background = new Color(132,131,130);
+	private final Color background = new Color(130,130,130);
 	private final float speed = 4f;
 	private final float jumpSpeed = 10f;
 	private final float friction = 0.88f;
