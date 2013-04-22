@@ -148,6 +148,21 @@ public class GameObject {
 	public boolean isColored() {
 		return colored;
 	}
+	
+	public int getColorID(){
+		if(colored){
+			if(c.b == 1){
+				return 0;
+			} else if(c.r == 1 && c.g == 0){
+				return 1;
+			} else if(c.g == 1 && c.r == 0){
+				return 2;
+			} else if(c.g == 1 && c.r == 1){
+				return 3;
+			}
+		}
+		return -1;
+	}
 
 	/**
 	 * @param colored the colored to set

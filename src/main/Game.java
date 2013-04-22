@@ -145,7 +145,7 @@ public class Game extends BasicGame{
 						p.setJumping(false);
 					}
 					if(obj.isColored()){
-						rotateGravity(gc, 1);
+						rotateGravity(gc, obj.getColorID());
 						collisionObject2 = obj;
 						dir2 = -1;
 					} else {
@@ -160,7 +160,7 @@ public class Game extends BasicGame{
 						p.setJumping(false);
 					}
 					if(obj.isColored()){
-						rotateGravity(gc, 3);
+						rotateGravity(gc, obj.getColorID());
 						collisionObject2 = obj;
 						dir2 = -1;
 					} else {
@@ -190,7 +190,7 @@ public class Game extends BasicGame{
 					collisionObject2 = obj;
 					if(obj.isColored()){
 						System.out.println("Collided upwards");
-						rotateGravity(gc, 2);
+						rotateGravity(gc, obj.getColorID());
 						
 						dir2 = -1;
 					} else {
@@ -234,14 +234,24 @@ public class Game extends BasicGame{
 //		System.out.println(p.getSpeedY());
 	}
 	
-	public void rotateGravity(GameContainer gc, float side){
+	public void rotateGravity(GameContainer gc, int side){
 		xGravity = 0;
 		yGravity = gravity;
+		int turn = -1;
+		if(objects[side].getX() == 400 && objects[side].getY() == 25){
+			turn = 2;
+		} else if(objects[side].getX() == 25 && objects[side].getY() == 400){
+			turn = 1;
+		} else if(objects[side].getX() == 775 && objects[side].getY() == 400){
+			turn = 3;
+		} else {
+			System.out.println("Fucked up turn: "+ objects[side].getX() + " | " + objects[side].getY());
+		}
 		for(GameObject obj : objects){
 			if(obj != null){
 				obj.setSpeedX(0);
 				obj.setSpeedY(0);
-				if(side == 2){
+				if(turn == 2){
 					obj.setX(gc.getWidth() - obj.getX());
 					obj.setY(gc.getHeight() - obj.getY());
 					obj.shape = obj.shape.transform(Transform.createRotateTransform((float) (Math.PI)));
@@ -250,8 +260,8 @@ public class Game extends BasicGame{
 					float tempX = obj.getX();
 					float tempY = obj.getY();
 				
-					obj.setX(tempY * (-side + 2) + gc.getWidth() * (1/2f*side - 1/2f));
-					obj.setY(tempX * (side - 2) + gc.getHeight() * (-1/2f*side + 3/2f));
+					obj.setX(tempY * (-turn + 2) + gc.getWidth() * (1/2f*turn - 1/2f));
+					obj.setY(tempX * (turn - 2) + gc.getHeight() * (-1/2f*turn + 3/2f));
 					obj.shape = obj.shape.transform(Transform.createRotateTransform((float) (Math.PI/2)));
 					if(obj.equals(p)){
 						System.out.println("Yes, this is player");
