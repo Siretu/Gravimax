@@ -1,6 +1,8 @@
 package objects;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.geom.Transform;
 
 public class Room {
 
@@ -28,6 +30,47 @@ public class Room {
 		this.gravity = 0.5f;
 		this.xGravity = 0;
 		this.yGravity = this.gravity;
+	}
+	
+	
+	public void rotateGravity(GameContainer gc, int side, Player p){
+		setxGravity(0);
+		setyGravity(getGravity());
+		int turn = -1;
+		if(objects[side].getX() == 400 && objects[side].getY() == 25){
+			turn = 2;
+		} else if(objects[side].getX() == 25 && objects[side].getY() == 400){
+			turn = 1;
+		} else if(objects[side].getX() == 775 && objects[side].getY() == 400){
+			turn = 3;
+		} else {
+			System.out.println("Fucked up turn: "+ objects[side].getX() + " | " + objects[side].getY());
+			return;
+		}
+		for(GameObject obj : objects){
+			if(obj != null){
+				obj.setSpeedX(0);
+				obj.setSpeedY(0);
+				if(turn == 2){
+					obj.setX(gc.getWidth() - obj.getX());
+					obj.setY(gc.getHeight() - obj.getY());
+					obj.shape = obj.shape.transform(Transform.createRotateTransform((float) (Math.PI)));
+				} else {
+					// Magic formula for rotating entire screen
+					float tempX = obj.getX();
+					float tempY = obj.getY();
+				
+					obj.setX(tempY * (-turn + 2) + gc.getWidth() * (1/2f*turn - 1/2f));
+					obj.setY(tempX * (turn - 2) + gc.getHeight() * (-1/2f*turn + 3/2f));
+					obj.shape = obj.shape.transform(Transform.createRotateTransform((float) (Math.PI/2)));
+					if(obj.equals(p)){
+						System.out.println("Yes, this is player");
+						System.out.println(obj.shape.getX() + "/" + obj.shape.getY());
+					}
+					System.out.println("Converted from: " + tempX + "/" + tempY + " to: " + obj.getX() + "/" + obj.getY());
+				}
+			}
+		}
 	}
 
 	/**

@@ -52,7 +52,7 @@ public class GameState extends BasicGameState{
 		r.objects[2] = new GameObject(new Rectangle(50,0,700,50),Color.green,true);
 		r.objects[3] = new GameObject(new Rectangle(750,50,50,700),Color.yellow,true);
 		r.objects[4] = p;
-		r.objects[5] = new GameObject(new Rectangle(500,650,50,50), Color.red,true);
+		r.objects[5] = new GameObject(new Rectangle(500,680,50,50), Color.red,true);
 		r.objects[6] = new GameObject(new Rectangle(150,560,50,90),Color.black);
 	}
 
@@ -68,6 +68,14 @@ public class GameState extends BasicGameState{
 		}
 		
 		p.draw(g);
+		g.setColor(Color.white);
+		g.drawLine(475, 0, 475, 800);
+		g.drawLine(0, 725, 800, 725);
+		
+		
+		g.setColor(Color.black);
+		g.drawLine(725, 0, 725, 800);
+		g.drawLine(0, 325, 800, 325);
 		
 		system.render();
 		
@@ -138,7 +146,7 @@ public class GameState extends BasicGameState{
 						p.setJumping(false);
 					}
 					if(obj.isColored()){
-						rotateGravity(gc, obj.getColorID());
+						r.rotateGravity(gc, obj.getColorID(),p);
 						collisionObject2 = obj;
 						dir2 = -1;
 					} else {
@@ -147,13 +155,14 @@ public class GameState extends BasicGameState{
 						collisionObject = obj;
 						dir = 1;
 					}
+					System.out.println("Collided left");
 				} else if(p.getSpeedX() > 0 && p.collideRight(obj) && Math.abs(p.getX() - (obj.getX() + obj.shape.getWidth() * -1)) < 50){ // Player collided with something to the right
 					p.setSpeedX(0);
 					if(r.getxGravity() > 0){
 						p.setJumping(false);
 					}
 					if(obj.isColored()){
-						rotateGravity(gc, obj.getColorID());
+						r.rotateGravity(gc, obj.getColorID(),p);
 						collisionObject2 = obj;
 						dir2 = -1;
 					} else {
@@ -162,7 +171,7 @@ public class GameState extends BasicGameState{
 						collisionObject = obj;
 						dir = -1;
 					}
-//					System.out.println("Collided right");
+					System.out.println("Collided right");
 				} 
 				
 				if(p.getSpeedY() > 0 && p.collideDown(obj) && Math.abs(p.getY() - (obj.getY() + (obj.shape.getHeight()/2 + p.shape.getWidth()/2) * -1)) < 20){ // Player collided with an object below
@@ -183,7 +192,7 @@ public class GameState extends BasicGameState{
 					collisionObject2 = obj;
 					if(obj.isColored()){
 						System.out.println("Collided upwards");
-						rotateGravity(gc, obj.getColorID());
+						r.rotateGravity(gc, obj.getColorID(),p);
 						
 						dir2 = -1;
 					} else {
@@ -192,7 +201,7 @@ public class GameState extends BasicGameState{
 						
 						
 					}
-//					System.out.println("Collided up");
+					System.out.println("Collided up");
 				}
 					
 			}
@@ -228,45 +237,7 @@ public class GameState extends BasicGameState{
 		
 	}
 	
-	public void rotateGravity(GameContainer gc, int side){
-		r.setxGravity(0);
-		r.setyGravity(r.getGravity());
-		int turn = -1;
-		if(r.objects[side].getX() == 400 && r.objects[side].getY() == 25){
-			turn = 2;
-		} else if(r.objects[side].getX() == 25 && r.objects[side].getY() == 400){
-			turn = 1;
-		} else if(r.objects[side].getX() == 775 && r.objects[side].getY() == 400){
-			turn = 3;
-		} else {
-			System.out.println("Fucked up turn: "+ r.objects[side].getX() + " | " + r.objects[side].getY());
-			return;
-		}
-		for(GameObject obj : r.objects){
-			if(obj != null){
-				obj.setSpeedX(0);
-				obj.setSpeedY(0);
-				if(turn == 2){
-					obj.setX(gc.getWidth() - obj.getX());
-					obj.setY(gc.getHeight() - obj.getY());
-					obj.shape = obj.shape.transform(Transform.createRotateTransform((float) (Math.PI)));
-				} else {
-					// Magic formula for rotating entire screen
-					float tempX = obj.getX();
-					float tempY = obj.getY();
-				
-					obj.setX(tempY * (-turn + 2) + gc.getWidth() * (1/2f*turn - 1/2f));
-					obj.setY(tempX * (turn - 2) + gc.getHeight() * (-1/2f*turn + 3/2f));
-					obj.shape = obj.shape.transform(Transform.createRotateTransform((float) (Math.PI/2)));
-					if(obj.equals(p)){
-						System.out.println("Yes, this is player");
-						System.out.println(obj.shape.getX() + "/" + obj.shape.getY());
-					}
-					System.out.println("Converted from: " + tempX + "/" + tempY + " to: " + obj.getX() + "/" + obj.getY());
-				}
-			}
-		}
-	}
+
 
 	@Override
 	public int getID() {
