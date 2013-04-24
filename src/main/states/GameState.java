@@ -4,6 +4,7 @@ import java.io.File;
 
 import objects.GameObject;
 import objects.Player;
+import objects.Room;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -21,23 +22,14 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class GameState extends BasicGameState{
 	public static final int ID = 1;
-
-	private final Color background = new Color(130,130,130);
-	private final float speed = 4f;
-	private final float jumpSpeed = 10f;
-	private final float friction = 0.88f;
-	private final float gravity = 0.5f;
-	private final float maxSpeed = 20;
-	
 	
 	int tick = 0;
 	int lastTick = 0;
 	int lastJump = 0;
-	private float xGravity;
-	private float yGravity;
+	
+	private Room r;
 	
 	public boolean change = false;
-	public GameObject[] objects;
 	private Player p;
 	
 	private ParticleSystem system;
@@ -47,31 +39,29 @@ public class GameState extends BasicGameState{
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		System.out.println("Initializing");
 		
-		p = new Player(new Rectangle(400,600,50,50));
+		r = new Room();
 		
-		xGravity = 0f;
-		yGravity = gravity;
+		p = new Player(new Rectangle(400,600,50,50));
 		
 		Image img = new Image("data/test_particle.png");
 		system = new ParticleSystem(img,1500);
 		
-		objects = new GameObject[20];
-		objects[0] = new GameObject(new Rectangle(50,750,700,50),Color.blue,true);
-		objects[1] = new GameObject(new Rectangle(0,50,50,700),Color.red,true);
-		objects[2] = new GameObject(new Rectangle(50,0,700,50),Color.green,true);
-		objects[3] = new GameObject(new Rectangle(750,50,50,700),Color.yellow,true);
-		objects[4] = p;
-		objects[5] = new GameObject(new Rectangle(500,650,50,50), Color.red,true);
-		objects[6] = new GameObject(new Rectangle(150,560,50,90),Color.black);
-		game.enterState(1);
+		r.objects = new GameObject[20];
+		r.objects[0] = new GameObject(new Rectangle(50,750,700,50),Color.blue,true);
+		r.objects[1] = new GameObject(new Rectangle(0,50,50,700),Color.red,true);
+		r.objects[2] = new GameObject(new Rectangle(50,0,700,50),Color.green,true);
+		r.objects[3] = new GameObject(new Rectangle(750,50,50,700),Color.yellow,true);
+		r.objects[4] = p;
+		r.objects[5] = new GameObject(new Rectangle(500,650,50,50), Color.red,true);
+		r.objects[6] = new GameObject(new Rectangle(150,560,50,90),Color.black);
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException {
-		g.setBackground(background);
+		g.setBackground(r.getBackground());
 		
 		// Draw Borders
-		for (GameObject b : objects){
+		for (GameObject b : r.objects){
 			if(b != null){
 				b.draw(g);
 			}
@@ -113,32 +103,12 @@ public class GameState extends BasicGameState{
 		
 		// Handle movement
 		if(gc.getInput().isKeyDown(Input.KEY_A)){
-			if(yGravity != 0){
-				p.setSpeedX(-speed * Math.signum(yGravity));
-			}
-			if(xGravity != 0){
-				p.setSpeedY(speed * Math.signum(xGravity));
-			}
+			p.moveLeft(r);
 		} else if(gc.getInput().isKeyDown(Input.KEY_D)){
-			if(yGravity != 0){
-				p.setSpeedX(speed * Math.signum(yGravity));
-			}
-			if(xGravity != 0){
-				p.setSpeedY(-speed * Math.signum(xGravity));
-			}
+			p.moveRight(r);
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_SPACE) && !p.isJumping() && (tick - lastJump >= 20 || lastJump == 0)){
-			if(yGravity > 0){
-				p.setSpeedY(-jumpSpeed);
-			} else if(yGravity < 0){
-				p.setSpeedY(jumpSpeed);
-			}
-			if(xGravity > 0){
-				p.setSpeedX(-jumpSpeed);
-			} else if(xGravity < 0){
-				p.setSpeedX(jumpSpeed);
-			}
-			p.setJumping(true);
+			p.jump(r);
 			lastJump = tick;
 		}
 		
@@ -155,15 +125,15 @@ public class GameState extends BasicGameState{
 		int dir = 1;
 		int dir2 = 1;
 		
-		// Loop through all objects and check for collision with player
-		for(GameObject obj : objects){
+		// Loop through all r.objects and check for collision with player
+		for(GameObject obj : r.objects){
 			if(obj != null && obj != p){
 				if(p.getSpeedX() < 0 && p.collideLeft(obj) && Math.abs(p.getX() - (obj.getX() + obj.shape.getWidth() * 1)) < 50){ // Player collided with an object to the left
 					System.out.println("pX: " + p.getX());
 					System.out.println("obj width: "+ obj.shape.getWidth());
 					System.out.println("obj X: "+ obj.getX());
 					p.setSpeedX(0);
-					if(xGravity < 0){
+					if(r.getxGravity() < 0){
 						System.out.println("Fixed jumping");
 						p.setJumping(false);
 					}
@@ -172,14 +142,14 @@ public class GameState extends BasicGameState{
 						collisionObject2 = obj;
 						dir2 = -1;
 					} else {
-						yGravity = 0;
-						xGravity = -gravity;
+						r.setyGravity(0);
+						r.setxGravity(-r.getGravity());
 						collisionObject = obj;
 						dir = 1;
 					}
 				} else if(p.getSpeedX() > 0 && p.collideRight(obj) && Math.abs(p.getX() - (obj.getX() + obj.shape.getWidth() * -1)) < 50){ // Player collided with something to the right
 					p.setSpeedX(0);
-					if(xGravity > 0){
+					if(r.getxGravity() > 0){
 						p.setJumping(false);
 					}
 					if(obj.isColored()){
@@ -187,8 +157,8 @@ public class GameState extends BasicGameState{
 						collisionObject2 = obj;
 						dir2 = -1;
 					} else {
-						yGravity = 0;
-						xGravity = gravity;
+						r.setyGravity(0);
+						r.setxGravity(r.getGravity());
 						collisionObject = obj;
 						dir = -1;
 					}
@@ -199,15 +169,15 @@ public class GameState extends BasicGameState{
 					collisionObject2 = obj;
 					dir2 = -1;
 					p.setSpeedY(0);
-					if(yGravity > 0){
+					if(r.getyGravity() > 0){
 						p.setJumping(false);
 					}
-					xGravity = 0;
-					yGravity = gravity;
+					r.setxGravity(0);
+					r.setyGravity(r.getGravity());
 //					System.out.println("Collided down");
 				} else if(p.getSpeedY() < 0 && p.collideUp(obj) && Math.abs(p.getY() - (obj.getY() + (obj.shape.getHeight()/2 + p.shape.getHeight() / 2) * 1)) < 20){ // Player collided with an object above
 					p.setSpeedY(0);
-					if(yGravity < 0){
+					if(r.getyGravity() < 0){
 						p.setJumping(false);
 					}
 					collisionObject2 = obj;
@@ -217,8 +187,8 @@ public class GameState extends BasicGameState{
 						
 						dir2 = -1;
 					} else {
-						xGravity = 0;
-						yGravity = -gravity;
+						r.setxGravity(0);
+						r.setyGravity(-r.getGravity());
 						
 						
 					}
@@ -228,7 +198,7 @@ public class GameState extends BasicGameState{
 			}
 		}
 
-		// Correct the collision so it doesn't go through solid objects but only do it if the distance is not too long (to prevent collision with several sides of one object)
+		// Correct the collision so it doesn't go through solid r.objects but only do it if the distance is not too long (to prevent collision with several sides of one object)
 		if(collisionObject != null){
 			System.out.println("Object X: " + collisionObject.getX());
 			System.out.println("Width: " + collisionObject.shape.getWidth());
@@ -246,32 +216,33 @@ public class GameState extends BasicGameState{
 		}
 		
 		// Handle friction and gravity
-		if(xGravity == 0){
-			p.setSpeedX(p.getSpeedX() * friction);
+		if(r.getxGravity() == 0){
+			p.setSpeedX(p.getSpeedX() * r.getFriction());
 		}
-		if(yGravity == 0) {
-			p.setSpeedY(p.getSpeedY() * friction);
+		if(r.getyGravity() == 0) {
+			p.setSpeedY(p.getSpeedY() * r.getFriction());
 		}
-		p.setSpeedX(Math.max(-maxSpeed, Math.min(maxSpeed,p.getSpeedX() + xGravity)));
-		p.setSpeedY(Math.max(-maxSpeed, Math.min(maxSpeed,p.getSpeedY() + yGravity)));
+		p.setSpeedX(Math.max(-p.getMaxSpeed(), Math.min(p.getMaxSpeed(),p.getSpeedX() + r.getxGravity())));
+		p.setSpeedY(Math.max(-p.getMaxSpeed(), Math.min(p.getMaxSpeed(),p.getSpeedY() + r.getyGravity())));
 //		System.out.println(p.getSpeedY());
 		
 	}
 	
 	public void rotateGravity(GameContainer gc, int side){
-		xGravity = 0;
-		yGravity = gravity;
+		r.setxGravity(0);
+		r.setyGravity(r.getGravity());
 		int turn = -1;
-		if(objects[side].getX() == 400 && objects[side].getY() == 25){
+		if(r.objects[side].getX() == 400 && r.objects[side].getY() == 25){
 			turn = 2;
-		} else if(objects[side].getX() == 25 && objects[side].getY() == 400){
+		} else if(r.objects[side].getX() == 25 && r.objects[side].getY() == 400){
 			turn = 1;
-		} else if(objects[side].getX() == 775 && objects[side].getY() == 400){
+		} else if(r.objects[side].getX() == 775 && r.objects[side].getY() == 400){
 			turn = 3;
 		} else {
-			System.out.println("Fucked up turn: "+ objects[side].getX() + " | " + objects[side].getY());
+			System.out.println("Fucked up turn: "+ r.objects[side].getX() + " | " + r.objects[side].getY());
+			return;
 		}
-		for(GameObject obj : objects){
+		for(GameObject obj : r.objects){
 			if(obj != null){
 				obj.setSpeedX(0);
 				obj.setSpeedY(0);
