@@ -1,6 +1,7 @@
 package objects;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
 
@@ -38,6 +39,69 @@ public class GameObject {
 		g.setColor(oldC);
 	}
 	
+	
+	public boolean handleCollisions(GameObject[] objects, Room r, GameContainer gc){
+		for(GameObject obj : objects){
+			if(obj != null && obj != this){ // Avoid nullpointers and colliding with itself
+				if(this.getSpeedX() < 0 && this.collideLeft(obj)){
+					this.setSpeedX(0);
+					if(r.getxGravity() < 0 && this instanceof Player){ // Reset jump
+						// Ugly hack to do player-specific stuff. Thought a lot about it and can't think of a nice way.
+						((Player) this).setJumping(false); 
+					}
+					if(obj.isColored()){
+						r.rotateGravity(gc, obj.getColorID(),this);
+						this.correctCollisionLeft(obj);
+					} else {
+						this.correctCollisionLeft(obj);
+					}
+					System.out.println("Collided left");
+				}
+				if(this.getSpeedX() > 0 && this.collideRight(obj)){
+					this.setSpeedX(0);
+					if(r.getxGravity() > 0 && this instanceof Player){ // Reset jump
+						// Ugly hack to do player-specific stuff. Thought a lot about it and can't think of a nice way.
+						((Player) this).setJumping(false); 
+					}
+					if(obj.isColored()){
+						r.rotateGravity(gc, obj.getColorID(),this);
+						this.correctCollisionRight(obj);
+					} else {
+						this.correctCollisionRight(obj);
+					}
+					System.out.println("Collided right");
+				}
+				if(this.getSpeedY() > 0 && this.collideDown(obj)){
+					this.setSpeedY(0);
+					if(r.getyGravity() > 0 && this instanceof Player){ // Reset jump
+						// Ugly hack to do player-specific stuff. Thought a lot about it and can't think of a nice way.
+						((Player) this).setJumping(false); 
+					}
+					r.setxGravity(0);
+					r.setyGravity(r.getGravity());
+					this.correctCollisionDown(obj);
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	public void correctCollisionLeft(GameObject obj){
+		this.setX(obj.getX() + (obj.shape.getWidth() + this.shape.getWidth()) /2);
+	}
+	
+	public void correctCollisionRight(GameObject obj){
+		this.setX(obj.getX() - (obj.shape.getWidth() + this.shape.getWidth()) /2);
+	}
+	
+	public void correctCollisionUp(GameObject obj){
+		this.setY(obj.getY() + (obj.shape.getHeight() + this.shape.getHeight()) /2);
+	}
+	
+	public void correctCollisionDown(GameObject obj){
+		this.setY(obj.getY() - (obj.shape.getHeight() + this.shape.getHeight()) /2);
+	}
 	
 	
 	public boolean collideLeft(GameObject obj){

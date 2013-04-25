@@ -33,7 +33,7 @@ public class Room {
 	}
 	
 	
-	public void rotateGravity(GameContainer gc, int side, Player p){
+	public void rotateGravity(GameContainer gc, int side, GameObject p){
 		setxGravity(0);
 		setyGravity(getGravity());
 		int turn = -1;
