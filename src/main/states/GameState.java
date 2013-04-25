@@ -100,10 +100,14 @@ public class GameState extends BasicGameState{
 				
 			}
 		}
-//		if(emitter != null){
-//			emitter.setPosition(p.getX(), p.getY());
-//		}
-//		system.setPosition(p.getX(),p.getY());
+
+	}
+	
+	public void gameLogic(GameContainer gc, StateBasedGame game, int delta){
+	//		if(emitter != null){
+	//		emitter.setPosition(p.getX(), p.getY());
+	//	}
+	//	system.setPosition(p.getX(),p.getY());
 		system.update(delta);
 		if(system != null){
 			
@@ -164,7 +168,7 @@ public class GameState extends BasicGameState{
 					if(obj.isColored()){
 						r.rotateGravity(gc, obj.getColorID(),p);
 						collisionObject2 = obj;
-						dir2 = -1;
+						dir2 = 1;
 					} else {
 						r.setyGravity(0);
 						r.setxGravity(r.getGravity());
@@ -183,7 +187,7 @@ public class GameState extends BasicGameState{
 					}
 					r.setxGravity(0);
 					r.setyGravity(r.getGravity());
-//					System.out.println("Collided down");
+	//				System.out.println("Collided down");
 				} else if(p.getSpeedY() < 0 && p.collideUp(obj) && Math.abs(p.getY() - (obj.getY() + (obj.shape.getHeight()/2 + p.shape.getHeight() / 2) * 1)) < 20){ // Player collided with an object above
 					p.setSpeedY(0);
 					if(r.getyGravity() < 0){
@@ -206,7 +210,7 @@ public class GameState extends BasicGameState{
 					
 			}
 		}
-
+	
 		// Correct the collision so it doesn't go through solid r.objects but only do it if the distance is not too long (to prevent collision with several sides of one object)
 		if(collisionObject != null){
 			System.out.println("Object X: " + collisionObject.getX());
@@ -217,11 +221,12 @@ public class GameState extends BasicGameState{
 			System.out.println("Corrected playerX to: " + p.getX() + "/" + p.getY());
 		}
 		if(collisionObject2 != null){
-//			System.out.println("Object Y: " + collisionObject2.getY());
-//			System.out.println("Height: " + collisionObject2.shape.getHeight());
-//			System.out.println("Dir2: " + dir2);
+			System.out.println("Object Y: " + collisionObject2.getY());
+			System.out.println("Height: " + collisionObject2.shape.getHeight());
+			System.out.println("Dir2: " + dir2);
+			System.out.println("player : " + p.getX() + "/" + p.getY());
 			p.setY(collisionObject2.getY() + (collisionObject2.shape.getHeight()/2 + p.shape.getHeight() / 2) * dir2);
-//			System.out.println("Corrected playerY to: " + p.getX() + "/" + p.getY());
+			System.out.println("Corrected playerY to: " + p.getX() + "/" + p.getY());
 		}
 		
 		// Handle friction and gravity
@@ -233,10 +238,9 @@ public class GameState extends BasicGameState{
 		}
 		p.setSpeedX(Math.max(-p.getMaxSpeed(), Math.min(p.getMaxSpeed(),p.getSpeedX() + r.getxGravity())));
 		p.setSpeedY(Math.max(-p.getMaxSpeed(), Math.min(p.getMaxSpeed(),p.getSpeedY() + r.getyGravity())));
-//		System.out.println(p.getSpeedY());
+	//	System.out.println(p.getSpeedY());
 		
 	}
-	
 
 
 	@Override
