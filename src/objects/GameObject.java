@@ -49,11 +49,13 @@ public class GameObject {
 						// Ugly hack to do player-specific stuff. Thought a lot about it and can't think of a nice way.
 						((Player) this).setJumping(false); 
 					}
+
+					this.correctCollisionLeft(obj);
 					if(obj.isColored()){
 						r.rotateGravity(gc, obj.getColorID(),this);
-						this.correctCollisionLeft(obj);
 					} else {
-						this.correctCollisionLeft(obj);
+						r.setyGravity(0);
+						r.setxGravity(-r.getGravity());
 					}
 					System.out.println("Collided left");
 				}
@@ -63,11 +65,13 @@ public class GameObject {
 						// Ugly hack to do player-specific stuff. Thought a lot about it and can't think of a nice way.
 						((Player) this).setJumping(false); 
 					}
+					this.correctCollisionRight(obj);
 					if(obj.isColored()){
 						r.rotateGravity(gc, obj.getColorID(),this);
-						this.correctCollisionRight(obj);
 					} else {
-						this.correctCollisionRight(obj);
+						r.setyGravity(0);
+						r.setxGravity(r.getGravity());
+						
 					}
 					System.out.println("Collided right");
 				}
@@ -77,9 +81,28 @@ public class GameObject {
 						// Ugly hack to do player-specific stuff. Thought a lot about it and can't think of a nice way.
 						((Player) this).setJumping(false); 
 					}
+					if(obj.isColored()){
+						r.rotateGravity(gc, obj.getColorID(),this);
+					}
 					r.setxGravity(0);
 					r.setyGravity(r.getGravity());
 					this.correctCollisionDown(obj);
+				}
+				if(this.getSpeedY() < 0 && this.collideUp(obj)){
+					this.setSpeedY(0);
+					if(r.getyGravity() < 0 && this instanceof Player){ // Reset jump
+						// Ugly hack to do player-specific stuff. Thought a lot about it and can't think of a nice way.
+						((Player) this).setJumping(false); 
+					}
+
+					this.correctCollisionUp(obj);
+					if(obj.isColored()){
+						r.rotateGravity(gc, obj.getColorID(),this);
+					} else {
+						r.setxGravity(0);
+						r.setyGravity(-r.getGravity());
+					}
+					System.out.println("Collided right");
 				}
 			}
 		}
@@ -108,7 +131,10 @@ public class GameObject {
 		if( (x - shape.getWidth() / 2 <= obj.getX() + obj.shape.getWidth() / 2) &&
 			(x + shape.getWidth() / 2 >= obj.getX()) && 
 			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 5) && 
-			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2)){
+			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2) &&
+			(Math.min(Math.abs(y + shape.getHeight() / 2 - obj.getY() + obj.shape.getHeight() / 2), // The minimum overlapping distance
+					Math.abs(y - shape.getHeight() / 2 - obj.getY() - obj.shape.getHeight() / 2))) > // should be bigger than the amount that need correcting.
+			(Math.abs(x - shape.getWidth() - obj.getX() - obj.shape.getWidth() / 2))){
 			return true;
 		} else {
 			return false;
@@ -119,7 +145,10 @@ public class GameObject {
 		if( (x - shape.getWidth() / 2 <= obj.getX()) && 
 			(x + shape.getWidth() / 2 >= obj.getX() - obj.shape.getWidth() / 2) && 
 			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 5) && 
-			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2)){
+			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2) &&
+			(Math.min(Math.abs(y + shape.getHeight() / 2 - obj.getY() + obj.shape.getHeight() / 2), // The minimum overlapping distance
+					Math.abs(y - shape.getHeight() / 2 - obj.getY() - obj.shape.getHeight() / 2))) > // should be bigger than the amount that need correcting.
+			(Math.abs(x + shape.getWidth() - obj.getX() + obj.shape.getWidth() / 2))){
 			return true;
 		} else {
 			return false;

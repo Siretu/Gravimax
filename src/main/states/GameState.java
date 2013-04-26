@@ -52,7 +52,7 @@ public class GameState extends BasicGameState{
 		r.objects[2] = new GameObject(new Rectangle(50,0,700,50),Color.green,true);
 		r.objects[3] = new GameObject(new Rectangle(750,50,50,700),Color.yellow,true);
 		r.objects[4] = p;
-		r.objects[5] = new GameObject(new Rectangle(500,680,50,50), Color.red,true);
+		r.objects[5] = new GameObject(new Rectangle(680,680,50,50), Color.yellow,true);
 		r.objects[6] = new GameObject(new Rectangle(150,560,50,90),Color.black);
 	}
 
@@ -129,104 +129,6 @@ public class GameState extends BasicGameState{
 		p.setY(p.getY() + p.getSpeedY());
 		
 		p.handleCollisions(r.objects, r, gc);
-//		// Handle all collisions
-//		GameObject collisionObject = null;
-//		GameObject collisionObject2 = null;
-//		int dir = 1;
-//		int dir2 = 1;
-//		
-//		
-//		// Loop through all r.objects and check for collision with player
-//		for(GameObject obj : r.objects){
-//			if(obj != null && obj != p){
-//				if(p.getSpeedX() < 0 && p.collideLeft(obj) && Math.abs(p.getX() - (obj.getX() + obj.shape.getWidth() * 1)) < 50){ // Player collided with an object to the left
-//					System.out.println("pX: " + p.getX());
-//					System.out.println("obj width: "+ obj.shape.getWidth());
-//					System.out.println("obj X: "+ obj.getX());
-//					p.setSpeedX(0);
-//					if(r.getxGravity() < 0){
-//						System.out.println("Fixed jumping");
-//						p.setJumping(false);
-//					}
-//					if(obj.isColored()){
-//						r.rotateGravity(gc, obj.getColorID(),p);
-//						collisionObject2 = obj;
-//						dir2 = -1;
-//					} else {
-//						r.setyGravity(0);
-//						r.setxGravity(-r.getGravity());
-//						collisionObject = obj;
-//						dir = 1;
-//					}
-//					System.out.println("Collided left");
-//				} else if(p.getSpeedX() > 0 && p.collideRight(obj) && Math.abs(p.getX() - (obj.getX() + obj.shape.getWidth() * -1)) < 50){ // Player collided with something to the right
-//					p.setSpeedX(0);
-//					if(r.getxGravity() > 0){
-//						p.setJumping(false);
-//					}
-//					if(obj.isColored()){
-//						r.rotateGravity(gc, obj.getColorID(),p);
-//						collisionObject2 = obj;
-//						dir2 = 1;
-//					} else {
-//						r.setyGravity(0);
-//						r.setxGravity(r.getGravity());
-//						collisionObject = obj;
-//						dir = -1;
-//					}
-//					System.out.println("Collided right");
-//				} 
-//				
-//				if(p.getSpeedY() > 0 && p.collideDown(obj) && Math.abs(p.getY() - (obj.getY() + (obj.shape.getHeight()/2 + p.shape.getWidth()/2) * -1)) < 20){ // Player collided with an object below
-//					collisionObject2 = obj;
-//					dir2 = -1;
-//					p.setSpeedY(0);
-//					if(r.getyGravity() > 0){
-//						p.setJumping(false);
-//					}
-//					r.setxGravity(0);
-//					r.setyGravity(r.getGravity());
-//	//				System.out.println("Collided down");
-//				} else if(p.getSpeedY() < 0 && p.collideUp(obj) && Math.abs(p.getY() - (obj.getY() + (obj.shape.getHeight()/2 + p.shape.getHeight() / 2) * 1)) < 20){ // Player collided with an object above
-//					p.setSpeedY(0);
-//					if(r.getyGravity() < 0){
-//						p.setJumping(false);
-//					}
-//					collisionObject2 = obj;
-//					if(obj.isColored()){
-//						System.out.println("Collided upwards");
-//						r.rotateGravity(gc, obj.getColorID(),p);
-//						
-//						dir2 = -1;
-//					} else {
-//						r.setxGravity(0);
-//						r.setyGravity(-r.getGravity());
-//						
-//						
-//					}
-//					System.out.println("Collided up");
-//				}
-//					
-//			}
-//		}
-//	
-//		// Correct the collision so it doesn't go through solid r.objects but only do it if the distance is not too long (to prevent collision with several sides of one object)
-//		if(collisionObject != null){
-//			System.out.println("Object X: " + collisionObject.getX());
-//			System.out.println("Width: " + collisionObject.shape.getWidth());
-//			System.out.println("Dir: " + dir);
-//			System.out.println("playerX : " + p.getX() + "/" + p.getY());
-//			p.setX(collisionObject.getX() + (collisionObject.shape.getWidth()/2 + p.shape.getWidth() / 2)* dir);
-//			System.out.println("Corrected playerX to: " + p.getX() + "/" + p.getY());
-//		}
-//		if(collisionObject2 != null){
-//			System.out.println("Object Y: " + collisionObject2.getY());
-//			System.out.println("Height: " + collisionObject2.shape.getHeight());
-//			System.out.println("Dir2: " + dir2);
-//			System.out.println("player : " + p.getX() + "/" + p.getY());
-//			p.setY(collisionObject2.getY() + (collisionObject2.shape.getHeight()/2 + p.shape.getHeight() / 2) * dir2);
-//			System.out.println("Corrected playerY to: " + p.getX() + "/" + p.getY());
-//		}
 		
 		// Handle friction and gravity
 		if(r.getxGravity() == 0){

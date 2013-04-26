@@ -44,7 +44,7 @@ public class Room {
 		} else if(objects[side].getX() == 775 && objects[side].getY() == 400){
 			turn = 3;
 		} else {
-			System.out.println("Fucked up turn: "+ objects[side].getX() + " | " + objects[side].getY());
+//			System.out.println("Fucked up turn: "+ objects[side].getX() + " | " + objects[side].getY());
 			return;
 		}
 		for(GameObject obj : objects){

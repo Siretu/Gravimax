@@ -32,6 +32,10 @@ public class Player extends GameObject{
 		this.isJumping = isJumping;
 	}
 	
+	public void resetJump(){
+		this.setJumping(false); 
+	}
+	
 	public void moveLeft(Room r){
 		if(r.getyGravity() != 0){
 			setSpeedX(-speed * Math.signum(r.getyGravity()));
