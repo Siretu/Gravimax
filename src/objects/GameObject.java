@@ -14,7 +14,7 @@ public class GameObject {
 	protected float x;
 	protected float x_accel = 0;
 	protected float x_speed = 0;
-	protected float x_speed_max = 8;
+	protected float x_speed_max = 10;
 	protected float accel = 3;
 	
 	protected int type;
@@ -67,8 +67,6 @@ public class GameObject {
 		this.x = s.getX() + s.getWidth() / 2;
 		this.y = s.getY() + s.getHeight() / 2;
 		this.type = BLOCK_COLORLESS;
-		shape.setCenterX(this.x);
-		shape.setCenterY(this.y);
 	}
 	
 	public GameObject(Shape s, Color c, int blockType){
@@ -81,6 +79,8 @@ public class GameObject {
 	}
 	
 	public void onUpdate(int gravityDir, float gravity) {
+		this.x_accel = 0;
+		this.y_accel = 0;
 		if(moveLeft == false && moveRight == false) {
 			if(gravityDir == UP || gravityDir == DOWN) {
 				this.stopMoveX();
@@ -170,11 +170,15 @@ public class GameObject {
 	public void onMove(GameObject[] objects, int gravityDir, Room room) {
 		if(this.x_speed == 0 && this.y_speed == 0)
 			return;
-		
+				
 		this.x += this.x_speed;
 		this.y += this.y_speed;
+
 		if(!this.flag.has(OBJECT_FLAG_GHOST)) {
-			this.checkCollisions(objects, gravityDir, room);
+		if(gravityDir == DOWN && this.y_speed == 0.5f)
+			return;
+			
+		this.checkCollisions(objects, gravityDir, room);
 		}
 	}
 	
@@ -185,15 +189,18 @@ public class GameObject {
 	private void checkCollisions(GameObject[] objects, int gravityDir, Room room) {
 		for(GameObject obj : objects) {
 			if (obj != null && obj != this && !obj.flag.has(OBJECT_FLAG_GHOST)) {
-				if (this.collideUp(obj)) {
-					this.onCollide(obj, gravityDir, UP, room);
-				} else if (this.collideDown(obj)) {
-					this.onCollide(obj, gravityDir, DOWN, room);
-				} else if (this.collideLeft(obj)) {
+				if (this.getSpeedX() < 0 && this.collideLeft(obj)) {
 					this.onCollide(obj, gravityDir, LEFT, room);
-				} else if (this.collideRight(obj)) {
+				}
+				if (this.getSpeedX() > 0 && this.collideRight(obj)) {
 					this.onCollide(obj, gravityDir, RIGHT, room);
 				}
+				if (this.getSpeedY() < 0 && this.collideUp(obj)) {
+					this.onCollide(obj, gravityDir, UP, room);
+				} 
+				if (this.getSpeedY() > 0 && this.collideDown(obj)) {
+					this.onCollide(obj, gravityDir, DOWN, room);
+				} 
 			}
 		}
 	}
@@ -202,8 +209,8 @@ public class GameObject {
 	}
 	
 	public void onRender(Graphics g){
-		shape.setCenterX(x);
-		shape.setCenterY(y);
+		this.shape.setCenterX(this.x);
+		this.shape.setCenterY(this.y);
 		Color oldC = g.getColor();
 		g.setColor(c);
 		g.fill(shape);

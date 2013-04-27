@@ -5,7 +5,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
-public class Player extends GameObject{
+public class Player extends GameObject {
 	public Player(Shape s){
 		super(s,Color.pink);
 		canJump = true;
@@ -27,8 +27,9 @@ public class Player extends GameObject{
 				case UP: 
 					this.correctCollisionUp(obj); 
 					this.y_speed = 0;
+					System.out.println("Collided: " + gravityDir + " " + colDir);
 					break;
-				case DOWN: 
+				case DOWN:
 					this.correctCollisionDown(obj);
 					room.setGravityDir(DOWN);
 					this.y_speed = 0;
@@ -36,17 +37,20 @@ public class Player extends GameObject{
 				case LEFT: 
 					this.correctCollisionLeft(obj); 
 					this.x_speed = 0;
+					System.out.println("Collided: " + gravityDir + " " + colDir);
 					break;
 				case RIGHT: 
 					this.correctCollisionRight(obj); 
 					this.x_speed = 0;
-					break;			
+					System.out.println("Collided: " + gravityDir + " " + colDir);
+					break;
 				}
 			} else {
 				switch(colDir) {
 				case UP: 
 					this.correctCollisionUp(obj); 
 					this.x_speed = 0;
+					System.out.println("Collided: " + gravityDir + " " + colDir);
 					break;
 				case DOWN: 
 					this.correctCollisionDown(obj);
@@ -56,13 +60,16 @@ public class Player extends GameObject{
 				case LEFT: 
 					this.correctCollisionLeft(obj); 
 					this.y_speed = 0;
+					System.out.println("Collided: " + gravityDir + " " + colDir);
 					break;
 				case RIGHT: 
 					this.correctCollisionRight(obj); 
 					this.y_speed = 0;
+					System.out.println("Collided: " + gravityDir + " " + colDir);
 					break;			
 				}
 			}
+	
 			if(obj.getColorID() != -1) {
 				if(obj.getColorID() == BLOCK_BLACK) {
 					room.setGravityDir(colDir);
