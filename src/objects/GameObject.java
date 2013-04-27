@@ -6,11 +6,56 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
 
 public class GameObject {
-	protected float x;
+	
 	protected float y;
-	protected float x_speed = 0;
+	protected float y_accel = 0;
 	protected float y_speed = 0;
-	protected boolean colored = false;
+	protected float y_speed_max = 10;
+	protected float x;
+	protected float x_accel = 0;
+	protected float x_speed = 0;
+	protected float x_speed_max = 8;
+	protected float accel = 3;
+	
+	protected int type;
+	protected boolean canJump = false;
+	
+	protected Flags flag = new Flags();
+	protected boolean moveLeft = false;
+	protected boolean moveRight = false;
+	
+	protected static final int OBJECT_FLAG_GRAVITY = 0x00000001;
+	protected static final int OBJECT_FLAG_GHOST = 0x00000002;
+	protected static final int OBJECT_FLAG_MAPONLY = 0x00000004;
+	
+	protected static final int UP = 10;
+	protected static final int LEFT = 11;
+	protected static final int RIGHT = 12;
+	protected static final int DOWN = 13;
+	
+	protected static final int BLOCK_COLORLESS = -1;
+	protected static final int BLOCK_BLUE = 1;
+	protected static final int BLOCK_RED = 2;
+	protected static final int BLOCK_GREEN = 3;
+	protected static final int BLOCK_YELLOW = 4;
+	protected static final int BLOCK_BLACK = 5;
+	
+	public class Flags {
+		int flag = 0x00000000;
+		
+		Flags() {}
+		
+		public boolean has(int n) {
+			int temp = flag & n;
+			if(temp == n)
+				return true;
+			return false;
+		}
+		
+		public void add(int n) {
+			flag |= n;
+		}
+	}
 	
 	public Shape shape;
 	public Color c;
@@ -21,16 +66,142 @@ public class GameObject {
 		this.c = c;
 		this.x = s.getX() + s.getWidth() / 2;
 		this.y = s.getY() + s.getHeight() / 2;
-//		shape.setCenterX(this.x);
-//		shape.setCenterY(this.y);
+		this.type = BLOCK_COLORLESS;
+		shape.setCenterX(this.x);
+		shape.setCenterY(this.y);
 	}
 	
-	public GameObject(Shape s, Color c, boolean colored){
+	public GameObject(Shape s, Color c, int blockType){
 		this(s,c);
-		this.colored = true;
+		this.type = blockType;
+		this.flag.add(OBJECT_FLAG_MAPONLY);
 	}
 	
-	public void draw(Graphics g){
+	public void onInit() {
+	}
+	
+	public void onUpdate(int gravityDir, float gravity) {
+		if(moveLeft == false && moveRight == false) {
+			if(gravityDir == UP || gravityDir == DOWN) {
+				this.stopMoveX();
+			} else {
+				this.stopMoveY();
+			}
+		}
+		if(moveLeft) {
+			switch(gravityDir) {
+			case UP: this.x_accel = this.accel; break;
+			case DOWN: this.x_accel = -this.accel; break;
+			case LEFT: this.y_accel = -this.accel; break;
+			case RIGHT: this.y_accel = this.accel; break;
+			}
+		}
+		if(moveRight) {
+			switch(gravityDir) {
+			case UP: this.x_accel = -this.accel; break;
+			case DOWN: this.x_accel = this.accel; break;
+			case LEFT: this.y_accel = this.accel; break;
+			case RIGHT: this.y_accel = -this.accel; break;
+			}
+		}
+		
+		if(this.flag.has(OBJECT_FLAG_GRAVITY)) {
+			switch(gravityDir) {
+			case UP: this.y_accel = -gravity; break;
+			case DOWN: this.y_accel = gravity; break;
+			case LEFT: this.x_accel = -gravity; break;
+			case RIGHT: this.x_accel = gravity; break;
+			}
+		}
+		
+		this.y_speed += y_accel;
+		this.x_speed += x_accel;
+		
+		if(this.x_speed > this.x_speed_max) this.x_speed = this.x_speed_max;
+		if(this.x_speed < -this.x_speed_max) this.x_speed = -this.x_speed_max;
+		if(this.y_speed > this.y_speed_max) this.y_speed = this.y_speed_max;
+		if(this.y_speed < -this.y_speed_max) this.y_speed = -this.y_speed_max;
+		
+		onAnimate();
+	}
+	
+	private void jump(int gravityDir) {
+		if(this.canJump) {
+			switch(gravityDir) {
+			case UP: this.y_accel = accel; this.y_speed += 10; break;
+			case DOWN: this.y_accel = -accel; this.y_speed -= 10; break;
+			case LEFT: this.x_accel = accel; this.x_speed += 10; break;
+			case RIGHT: this.x_accel = -accel; this.x_speed -= 10; break;
+			}
+			this.canJump = false;
+		}
+	}
+	
+	private void stopMoveX() {
+		if(this.x_speed > 0) {
+	        this.x_accel = -1;
+	    }
+
+	    if(this.x_speed < 0) {
+	        this.x_accel = 1;
+	    }
+
+	    if(this.x_speed < 2.0f && this.x_speed > -2.0f) {
+	        this.x_accel = 0;
+	        this.x_speed = 0;
+	    }
+	}
+	
+	private void stopMoveY() {
+		if(this.y_speed > 0) {
+	        this.y_accel = -1;
+	    }
+
+	    if(this.y_speed < 0) {
+	        this.y_accel = 1;
+	    }
+
+	    if(this.y_speed < 2.0f && this.y_speed > -2.0f) {
+	        this.y_accel = 0;
+	        this.y_speed = 0;
+	    }
+	}
+	
+	public void onMove(GameObject[] objects, int gravityDir, Room room) {
+		if(this.x_speed == 0 && this.y_speed == 0)
+			return;
+		
+		this.x += this.x_speed;
+		this.y += this.y_speed;
+		if(!this.flag.has(OBJECT_FLAG_GHOST)) {
+			this.checkCollisions(objects, gravityDir, room);
+		}
+	}
+	
+	private void onAnimate() {
+		//TODO
+	}
+	
+	private void checkCollisions(GameObject[] objects, int gravityDir, Room room) {
+		for(GameObject obj : objects) {
+			if (obj != null && obj != this && !obj.flag.has(OBJECT_FLAG_GHOST)) {
+				if (this.collideUp(obj)) {
+					this.onCollide(obj, gravityDir, UP, room);
+				} else if (this.collideDown(obj)) {
+					this.onCollide(obj, gravityDir, DOWN, room);
+				} else if (this.collideLeft(obj)) {
+					this.onCollide(obj, gravityDir, LEFT, room);
+				} else if (this.collideRight(obj)) {
+					this.onCollide(obj, gravityDir, RIGHT, room);
+				}
+			}
+		}
+	}
+	
+	protected void onCollide(GameObject obj, int gravityDir, int colDir, Room room) {
+	}
+	
+	public void onRender(Graphics g){
 		shape.setCenterX(x);
 		shape.setCenterY(y);
 		Color oldC = g.getColor();
@@ -38,8 +209,7 @@ public class GameObject {
 		g.fill(shape);
 		g.setColor(oldC);
 	}
-	
-	
+	/*
 	public boolean handleCollisions(GameObject[] objects, Room r, GameContainer gc){
 		for(GameObject obj : objects){
 			if(obj != null && obj != this){ // Avoid nullpointers and colliding with itself
@@ -108,7 +278,7 @@ public class GameObject {
 		}
 		
 		return true;
-	}
+	}*/
 	
 	public void correctCollisionLeft(GameObject obj){
 		this.setX(obj.getX() + (obj.shape.getWidth() + this.shape.getWidth()) /2);
@@ -239,28 +409,39 @@ public class GameObject {
 	 * @return the colored
 	 */
 	public boolean isColored() {
-		return colored;
+		if (this.type == BLOCK_COLORLESS)
+			return false;
+		return true;
 	}
 	
 	public int getColorID(){
-		if(colored){
-			if(c.b == 1){
-				return 0;
-			} else if(c.r == 1 && c.g == 0){
-				return 1;
-			} else if(c.g == 1 && c.r == 0){
-				return 2;
-			} else if(c.g == 1 && c.r == 1){
-				return 3;
-			}
-		}
-		return -1;
+		return this.type;
 	}
 
 	/**
 	 * @param colored the colored to set
 	 */
-	public void setColored(boolean colored) {
-		this.colored = colored;
+	public void setColored(int newType) {
+		this.type = newType;
+	}
+	
+	public void moveLeft() {
+		this.moveLeft = true;
+	}
+	
+	public void moveRight() {
+		this.moveRight = true;
+	}
+	
+	public void stopLeft() {
+		this.moveLeft = false;
+	}
+	
+	public void stopRight() {
+		this.moveRight = false;
+	}
+	
+	public void tryJump(int gravityDir) {
+		this.jump(gravityDir);
 	}
 }

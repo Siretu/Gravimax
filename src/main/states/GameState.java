@@ -30,7 +30,6 @@ public class GameState extends BasicGameState{
 	private Room r;
 	
 	public boolean change = false;
-	private Player p;
 	
 	private ParticleSystem system;
 	ConfigurableEmitter emitter;
@@ -40,56 +39,27 @@ public class GameState extends BasicGameState{
 		System.out.println("Initializing");
 		
 		r = new Room();
-		
-		p = new Player(new Rectangle(400,600,50,50));
+		r.onInit(gc);
 		
 		Image img = new Image("data/test_particle.png");
 		system = new ParticleSystem(img,1500);
-		
-		r.objects = new GameObject[20];
-		r.objects[0] = new GameObject(new Rectangle(50,750,700,50),Color.blue,true);
-		r.objects[1] = new GameObject(new Rectangle(0,50,50,700),Color.red,true);
-		r.objects[2] = new GameObject(new Rectangle(50,0,700,50),Color.green,true);
-		r.objects[3] = new GameObject(new Rectangle(750,50,50,700),Color.yellow,true);
-		r.objects[4] = p;
-		r.objects[5] = new GameObject(new Rectangle(680,680,50,50), Color.yellow,true);
-		r.objects[6] = new GameObject(new Rectangle(150,560,50,90),Color.black);
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException {
-		g.setBackground(r.getBackground());
-		
-		// Draw Borders
-		for (GameObject b : r.objects){
-			if(b != null){
-				b.draw(g);
-			}
-		}
-		
-		p.draw(g);
-		g.setColor(Color.white);
-		g.drawLine(475, 0, 475, 800);
-		g.drawLine(0, 725, 800, 725);
-		
-		
-		g.setColor(Color.black);
-		g.drawLine(725, 0, 725, 800);
-		g.drawLine(0, 325, 800, 325);
-		
+		r.onRender(g);
 		system.render();
-		
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta) throws SlickException {
 		tick++;
-		
-		gameLogic(gc,game,delta);
+		r.onUpdate();
+		//gameLogic(gc,game,delta);
 
 	}
 	
-	public void handleInput(GameContainer gc){
+	/*public void handleInput(GameContainer gc){
 		// Print debug output
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE) && (tick - lastTick > 30 || lastTick == 0)){
 			System.out.println(p.getX()+"/"+p.getY());
@@ -131,7 +101,7 @@ public class GameState extends BasicGameState{
 		p.handleCollisions(r.objects, r, gc);
 		
 		// Handle friction and gravity
-		if(r.getxGravity() == 0){
+		if(r.getxGravity() == 0) {
 			p.setSpeedX(p.getSpeedX() * r.getFriction());
 		}
 		if(r.getyGravity() == 0) {
@@ -141,7 +111,7 @@ public class GameState extends BasicGameState{
 		p.setSpeedY(Math.max(-p.getMaxSpeed(), Math.min(p.getMaxSpeed(),p.getSpeedY() + r.getyGravity())));
 	//	System.out.println(p.getSpeedY());
 		
-	}
+	}*/
 
 
 	@Override

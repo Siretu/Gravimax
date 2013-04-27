@@ -6,32 +6,76 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
 public class Player extends GameObject{
-	private boolean isJumping = false;
-	private float speed = 4f;
-	private float jumpSpeed = 10f;
-	private float maxSpeed = 20;
-
 	public Player(Shape s){
 		super(s,Color.pink);
-		this.speed = 4;
-		this.jumpSpeed = 10;
-		this.maxSpeed = 20;
-	}
-
-	/**
-	 * @return the isJumping
-	 */
-	public boolean isJumping() {
-		return isJumping;
-	}
-
-	/**
-	 * @param isJumping the isJumping to set
-	 */
-	public void setJumping(boolean isJumping) {
-		this.isJumping = isJumping;
+		canJump = true;
 	}
 	
+	@Override
+	public void onInit() {
+		flag.add(OBJECT_FLAG_GRAVITY);
+	}
+	
+	@Override
+	protected void onCollide(GameObject obj, int gravityDir, int colDir, Room room) {
+		if(obj.flag.has(OBJECT_FLAG_MAPONLY)) {
+			if(gravityDir == colDir) {
+				this.canJump = true;
+			}
+			if(gravityDir == UP || gravityDir == DOWN) {
+				switch(colDir) {
+				case UP: 
+					this.correctCollisionUp(obj); 
+					this.y_speed = 0;
+					break;
+				case DOWN: 
+					this.correctCollisionDown(obj);
+					room.setGravityDir(DOWN);
+					this.y_speed = 0;
+					break;
+				case LEFT: 
+					this.correctCollisionLeft(obj); 
+					this.x_speed = 0;
+					break;
+				case RIGHT: 
+					this.correctCollisionRight(obj); 
+					this.x_speed = 0;
+					break;			
+				}
+			} else {
+				switch(colDir) {
+				case UP: 
+					this.correctCollisionUp(obj); 
+					this.x_speed = 0;
+					break;
+				case DOWN: 
+					this.correctCollisionDown(obj);
+					room.setGravityDir(DOWN);
+					this.x_speed = 0;
+					break;
+				case LEFT: 
+					this.correctCollisionLeft(obj); 
+					this.y_speed = 0;
+					break;
+				case RIGHT: 
+					this.correctCollisionRight(obj); 
+					this.y_speed = 0;
+					break;			
+				}
+			}
+			if(obj.getColorID() != -1) {
+				if(obj.getColorID() == BLOCK_BLACK) {
+					room.setGravityDir(colDir);
+				} else {
+					if(colDir != DOWN) {
+						room.rotateGravity(obj.getColorID(), this);
+					}
+				}
+			}
+		}
+	}
+
+	/*
 	public void resetJump(){
 		this.setJumping(false); 
 	}
@@ -67,48 +111,5 @@ public class Player extends GameObject{
 		}
 		setJumping(true);
 	}
-
-	/**
-	 * @return the speed
-	 */
-	public float getSpeed() {
-		return speed;
-	}
-
-	/**
-	 * @param speed the speed to set
-	 */
-	public void setSpeed(float speed) {
-		this.speed = speed;
-	}
-
-	/**
-	 * @return the jumpSpeed
-	 */
-	public float getJumpSpeed() {
-		return jumpSpeed;
-	}
-
-	/**
-	 * @param jumpSpeed the jumpSpeed to set
-	 */
-	public void setJumpSpeed(float jumpSpeed) {
-		this.jumpSpeed = jumpSpeed;
-	}
-
-	/**
-	 * @return the maxSpeed
-	 */
-	public float getMaxSpeed() {
-		return maxSpeed;
-	}
-
-	/**
-	 * @param maxSpeed the maxSpeed to set
-	 */
-	public void setMaxSpeed(float maxSpeed) {
-		this.maxSpeed = maxSpeed;
-	}
-
-	
+	*/
 }
