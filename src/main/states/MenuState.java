@@ -11,7 +11,6 @@ import org.newdawn.slick.state.StateBasedGame;
 public class MenuState extends BasicGameState{
 	private float rotation;
 	private Image redspiral;
-	private Image bluespiral;
 	private Image greenspiral;
 	
 
@@ -19,7 +18,6 @@ public class MenuState extends BasicGameState{
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		rotation = 5;
 		redspiral = new Image("data/redspiral.png");
-		bluespiral = new Image("data/bluespiral.png");
 		greenspiral = new Image("data/greenspiral.png");
 		
 		
