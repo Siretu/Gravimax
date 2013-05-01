@@ -115,12 +115,7 @@ public class Room {
 	public void onUpdate() {
 		for(GameObject obj : objects) {
 			if(obj != null) {
-				obj.onUpdate(gravityDir, gravity);
-			}
-		}
-		for(GameObject obj : objects) {
-			if(obj != null) {
-				obj.onMove(objects, gravityDir, this);
+				obj.onUpdate(this);
 			}
 		}
 	}
@@ -222,5 +217,9 @@ public class Room {
 	
 	public void setGravityDir(int gravityDir) {
 		this.gravityDir = gravityDir;
+	}
+	
+	public GameObject[] getObjects() {
+		return objects;
 	}
 }

@@ -6,16 +6,14 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
 
 public class GameObject {
+	protected float speed = 4f;
+	protected float jumpSpeed = 10f;
+	protected float maxSpeed = 20f;
 	
 	protected float y;
-	protected float y_accel = 0;
 	protected float y_speed = 0;
-	protected float y_speed_max = 10;
 	protected float x;
-	protected float x_accel = 0;
 	protected float x_speed = 0;
-	protected float x_speed_max = 10;
-	protected float accel = 3;
 	
 	protected int type;
 	protected boolean canJump = false;
@@ -78,6 +76,65 @@ public class GameObject {
 	public void onInit() {
 	}
 	
+	public void onUpdate(Room room) {
+		if(this.flag.has(OBJECT_FLAG_MAPONLY)) 
+			return;
+		
+		this.handleInput(room.getGravityDir(), room.getGravity());
+		this.onMove(room);
+	}
+	
+	private void handleInput(int gravityDir, float gravity) {
+		if(moveLeft) {
+			if(gravityDir == UP || gravityDir == DOWN) {
+				this.x_speed = -this.speed * Math.signum(gravity);
+			}
+			if(gravityDir == LEFT || gravityDir == RIGHT) {
+				this.y_speed = this.speed * Math.signum(gravity);
+			}
+		}
+		
+		if(moveRight) {
+			if(gravityDir == UP || gravityDir == DOWN) {
+				this.x_speed = this.speed * Math.signum(gravity);
+			}
+			if(gravityDir == LEFT || gravityDir == RIGHT) {
+				this.y_speed = -this.speed * Math.signum(gravity);
+			}
+		}
+	}
+	
+	private void onMove(Room room) {
+		int gravityDir = room.getGravityDir();
+		float gravity = room.getGravity();
+		
+		this.x += this.x_speed;
+		this.y += this.y_speed;
+		
+		this.checkCollisions(room);
+	
+		if(gravityDir == UP || gravityDir == DOWN) {
+			this.x_speed *= room.getFriction();
+			if(gravityDir == UP) {
+				this.y_speed -= gravity;
+			} else {
+				this.y_speed += gravity;
+			}
+		}
+		if(gravityDir == LEFT || gravityDir == RIGHT) {
+			this.y_speed *= room.getFriction();
+			if(gravityDir == LEFT) {
+				this.x_speed -= gravity;
+			} else {
+				this.x_speed += gravity;
+			}
+		}
+		
+		this.y_speed = Math.max(-this.maxSpeed, Math.min(this.maxSpeed, this.y_speed));
+		this.x_speed = Math.max(-this.maxSpeed, Math.min(this.maxSpeed,this.x_speed));
+	}
+	
+	/*
 	public void onUpdate(int gravityDir, float gravity) {
 		this.x_accel = 0;
 		this.y_accel = 0;
@@ -123,19 +180,21 @@ public class GameObject {
 		if(this.y_speed < -this.y_speed_max) this.y_speed = -this.y_speed_max;
 		
 		onAnimate();
-	}
+	}*/
 	
 	private void jump(int gravityDir) {
 		if(this.canJump) {
 			switch(gravityDir) {
-			case UP: this.y_accel = accel; this.y_speed += 10; break;
-			case DOWN: this.y_accel = -accel; this.y_speed -= 10; break;
-			case LEFT: this.x_accel = accel; this.x_speed += 10; break;
-			case RIGHT: this.x_accel = -accel; this.x_speed -= 10; break;
+			case UP: this.y_speed = this.jumpSpeed; break;
+			case DOWN: this.y_speed = -this.jumpSpeed; break;
+			case LEFT: this.x_speed = this.jumpSpeed; break;
+			case RIGHT: this.x_speed = -this.jumpSpeed; break;
 			}
 			this.canJump = false;
 		}
 	}
+	
+	/*
 	
 	private void stopMoveX() {
 		if(this.x_speed > 0) {
@@ -166,7 +225,7 @@ public class GameObject {
 	        this.y_speed = 0;
 	    }
 	}
-	
+
 	public void onMove(GameObject[] objects, int gravityDir, Room room) {
 		if(this.x_speed == 0 && this.y_speed == 0)
 			return;
@@ -181,12 +240,15 @@ public class GameObject {
 		this.checkCollisions(objects, gravityDir, room);
 		}
 	}
-	
+	*/
 	private void onAnimate() {
 		//TODO
 	}
 	
-	private void checkCollisions(GameObject[] objects, int gravityDir, Room room) {
+	private void checkCollisions(Room room) {
+		GameObject objects[] = room.getObjects();
+		int gravityDir = room.getGravityDir();
+		
 		for(GameObject obj : objects) {
 			if (obj != null && obj != this && !obj.flag.has(OBJECT_FLAG_GHOST)) {
 				if (this.getSpeedX() < 0 && this.collideLeft(obj)) {
