@@ -80,8 +80,22 @@ public class GameObject {
 		if(this.flag.has(OBJECT_FLAG_MAPONLY)) 
 			return;
 		
+		this.checkJumpStatus(room.getObjects());
 		this.handleInput(room.getGravityDir(), room.getGravity());
 		this.onMove(room);
+	}
+	
+	private void checkJumpStatus(GameObject[] objects) {
+		for (GameObject obj : objects) {
+			if(obj != null) {
+				if(!obj.flag.has(OBJECT_FLAG_MAPONLY)) {
+					continue;
+				}
+				if(this.collideDown(obj) == false) {
+					this.canJump = false;
+				}
+			}
+		}
 	}
 	
 	private void handleInput(int gravityDir, float gravity) {
@@ -191,7 +205,6 @@ public class GameObject {
 			case LEFT: this.x_speed = this.jumpSpeed; break;
 			case RIGHT: this.x_speed = -this.jumpSpeed; break;
 			}
-			this.canJump = false;
 		}
 	}
 	
@@ -252,18 +265,19 @@ public class GameObject {
 		
 		for(GameObject obj : objects) {
 			if (obj != null && obj != this && !obj.flag.has(OBJECT_FLAG_GHOST)) {
+				if (this.getSpeedY() > 0 && this.collideDown(obj)) {
+					this.onCollide(obj, gravityDir, DOWN, room);
+				} 
+				if (this.getSpeedY() < 0 && this.collideUp(obj)) {
+					this.onCollide(obj, gravityDir, UP, room);
+				}
 				if (this.getSpeedX() < 0 && this.collideLeft(obj)) {
 					this.onCollide(obj, gravityDir, LEFT, room);
 				}
 				if (this.getSpeedX() > 0 && this.collideRight(obj)) {
 					this.onCollide(obj, gravityDir, RIGHT, room);
 				}
-				if (this.getSpeedY() < 0 && this.collideUp(obj)) {
-					this.onCollide(obj, gravityDir, UP, room);
-				} 
-				if (this.getSpeedY() > 0 && this.collideDown(obj)) {
-					this.onCollide(obj, gravityDir, DOWN, room);
-				} 
+				 
 			}
 		}
 	}
@@ -366,7 +380,7 @@ public class GameObject {
 		this.setY(obj.getY() - (obj.shape.getHeight() + this.shape.getHeight()) /2);
 	}
 	
-	
+	/*
 	public boolean collideLeft(GameObject obj){
 		if( (x - shape.getWidth() / 2 <= obj.getX() + obj.shape.getWidth() / 2) &&
 			(x + shape.getWidth() / 2 >= obj.getX()) && 
@@ -393,6 +407,28 @@ public class GameObject {
 		} else {
 			return false;
 		}
+	}*/
+	
+	public boolean collideLeft(GameObject obj){
+		if( (x - shape.getWidth() / 2 <= obj.getX() + obj.shape.getWidth() / 2) &&
+			(x + shape.getWidth() / 2 >= obj.getX()) && 
+			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 5) && 
+			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean collideRight(GameObject obj){
+		if( (x - shape.getWidth() / 2 <= obj.getX()) && 
+			(x + shape.getWidth() / 2 >= obj.getX() - obj.shape.getWidth() / 2) && 
+			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 5) && 
+			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public boolean collideDown(GameObject obj){
@@ -405,6 +441,7 @@ public class GameObject {
 			return false;
 		}
 	}
+	
 	
 	public boolean collideUp(GameObject obj){
 		if( (x + shape.getWidth() / 2 > obj.getX() - obj.shape.getWidth() / 2 + 5) && 

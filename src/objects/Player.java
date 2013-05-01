@@ -22,60 +22,38 @@ public class Player extends GameObject {
 			if(gravityDir == colDir) {
 				this.canJump = true;
 			}
-			if(gravityDir == UP || gravityDir == DOWN) {
-				switch(colDir) {
-				case UP: 
-					this.correctCollisionUp(obj); 
-					this.y_speed = 0;
-					System.out.println("Collided: " + gravityDir + " " + colDir);
-					break;
-				case DOWN:
-					this.correctCollisionDown(obj);
-					room.setGravityDir(DOWN);
-					this.y_speed = 0;
-					break;
-				case LEFT: 
-					this.correctCollisionLeft(obj); 
-					this.x_speed = 0;
-					System.out.println("Collided: " + gravityDir + " " + colDir);
-					break;
-				case RIGHT: 
-					this.correctCollisionRight(obj); 
-					this.x_speed = 0;
-					System.out.println("Collided: " + gravityDir + " " + colDir);
-					break;
-				}
-			} else {
-				switch(colDir) {
-				case UP: 
-					this.correctCollisionUp(obj); 
-					this.y_speed = 0;
-					System.out.println("Collided: " + gravityDir + " " + colDir);
-					break;
-				case DOWN: 
-					this.correctCollisionDown(obj);
-					room.setGravityDir(DOWN);
-					this.y_speed = 0;
-					break;
-				case LEFT: 
-					this.correctCollisionLeft(obj); 
-					this.x_speed = 0;
-					System.out.println("Collided: " + gravityDir + " " + colDir);
-					break;
-				case RIGHT: 
-					this.correctCollisionRight(obj); 
-					this.x_speed = 0;
-					System.out.println("Collided: " + gravityDir + " " + colDir);
-					break;			
-				}
+			
+			switch(colDir) {
+			case UP: 
+				this.correctCollisionUp(obj); 
+				this.y_speed = 0;
+				System.out.println("Collided: " + gravityDir + " " + colDir);
+				break;
+			case DOWN:
+				this.correctCollisionDown(obj);
+				this.y_speed = 0;
+				System.out.println("Collided: " + gravityDir + " " + colDir);
+				break;
+			case LEFT: 
+				this.correctCollisionLeft(obj); 
+				this.x_speed = 0;
+				System.out.println("Collided: " + gravityDir + " " + colDir);
+				break;
+			case RIGHT: 
+				this.correctCollisionRight(obj); 
+				this.x_speed = 0;
+				System.out.println("Collided: " + gravityDir + " " + colDir);
+				break;
 			}
 	
 			if(obj.getColorID() != -1) {
 				if(obj.getColorID() == BLOCK_BLACK) {
 					room.setGravityDir(colDir);
 				} else {
-					if(colDir != DOWN) {
+					if(obj.getColorID() != room.getGravityColor()) {
 						room.rotateGravity(obj.getColorID(), this);
+					} else {
+						room.setGravityDir(DOWN);
 					}
 				}
 			}

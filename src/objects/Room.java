@@ -28,6 +28,7 @@ public class Room {
 	private float friction = 0.88f;
 	private float gravity = 0.5f;
 	private int gravityDir = DOWN;
+	private int gravityColor;
 	
 	private int gcWidth;
 	private int gcHeight;
@@ -40,6 +41,7 @@ public class Room {
 		this.background = c;
 		this.friction = friction;
 		this.gravity = gravity;
+		this.gravityColor = BLOCK_BLUE;
 	}
 	
 	public Room(){
@@ -132,6 +134,7 @@ public class Room {
 	
 	public void rotateGravity(int side, GameObject p){
 		this.setGravityDir(DOWN);
+		this.gravityColor = side;
 		int turn = -1;
 		if(objects[side].getX() == 400 && objects[side].getY() == 25){
 			turn = 2;
@@ -221,5 +224,9 @@ public class Room {
 	
 	public GameObject[] getObjects() {
 		return objects;
+	}
+	
+	public int getGravityColor() {
+		return this.gravityColor;
 	}
 }
