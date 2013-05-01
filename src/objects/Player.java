@@ -49,22 +49,22 @@ public class Player extends GameObject {
 				switch(colDir) {
 				case UP: 
 					this.correctCollisionUp(obj); 
-					this.x_speed = 0;
+					this.y_speed = 0;
 					System.out.println("Collided: " + gravityDir + " " + colDir);
 					break;
 				case DOWN: 
 					this.correctCollisionDown(obj);
 					room.setGravityDir(DOWN);
-					this.x_speed = 0;
+					this.y_speed = 0;
 					break;
 				case LEFT: 
 					this.correctCollisionLeft(obj); 
-					this.y_speed = 0;
+					this.x_speed = 0;
 					System.out.println("Collided: " + gravityDir + " " + colDir);
 					break;
 				case RIGHT: 
 					this.correctCollisionRight(obj); 
-					this.y_speed = 0;
+					this.x_speed = 0;
 					System.out.println("Collided: " + gravityDir + " " + colDir);
 					break;			
 				}

@@ -8,7 +8,7 @@ import org.newdawn.slick.geom.Shape;
 public class GameObject {
 	protected float speed = 4f;
 	protected float jumpSpeed = 10f;
-	protected float maxSpeed = 20f;
+	protected float maxSpeed = 10f;
 	
 	protected float y;
 	protected float y_speed = 0;
@@ -129,6 +129,7 @@ public class GameObject {
 				this.x_speed += gravity;
 			}
 		}
+		
 		
 		this.y_speed = Math.max(-this.maxSpeed, Math.min(this.maxSpeed, this.y_speed));
 		this.x_speed = Math.max(-this.maxSpeed, Math.min(this.maxSpeed,this.x_speed));
