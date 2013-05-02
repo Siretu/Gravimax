@@ -100,20 +100,32 @@ public class GameObject {
 	
 	private void handleInput(int gravityDir, float gravity) {
 		if(moveLeft) {
-			if(gravityDir == UP || gravityDir == DOWN) {
+			if(gravityDir == DOWN) {
 				this.x_speed = -this.speed * Math.signum(gravity);
 			}
-			if(gravityDir == LEFT || gravityDir == RIGHT) {
+			if(gravityDir == UP) {
+				this.x_speed = this.speed * Math.signum(gravity);
+			}
+			if(gravityDir == RIGHT) {
 				this.y_speed = this.speed * Math.signum(gravity);
+			}
+			if(gravityDir == LEFT) {
+				this.y_speed = -this.speed * Math.signum(gravity); 
 			}
 		}
 		
 		if(moveRight) {
-			if(gravityDir == UP || gravityDir == DOWN) {
+			if(gravityDir == DOWN) {
 				this.x_speed = this.speed * Math.signum(gravity);
 			}
-			if(gravityDir == LEFT || gravityDir == RIGHT) {
+			if(gravityDir == UP) {
+				this.x_speed = -this.speed * Math.signum(gravity);
+			}
+			if(gravityDir == RIGHT) {
 				this.y_speed = -this.speed * Math.signum(gravity);
+			}
+			if(gravityDir == LEFT) {
+				this.y_speed = this.speed * Math.signum(gravity);
 			}
 		}
 	}
