@@ -16,6 +16,8 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class MenuState extends BasicGameState{
+	public static final int ID = 3;
+	
 	private float rotation;
 	private Image redspiral;
 	private Image greenspiral;
@@ -59,7 +61,7 @@ public class MenuState extends BasicGameState{
 
 	@Override
 	public int getID() {
-		return 3;
+		return ID;
 	}
 
 }

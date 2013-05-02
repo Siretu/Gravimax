@@ -260,24 +260,26 @@ public class GameObject {
 	}
 	
 	private void checkCollisions(Room room) {
-		GameObject objects[] = room.getObjects();
-		int gravityDir = room.getGravityDir();
-		
-		for(GameObject obj : objects) {
-			if (obj != null && obj != this && !obj.flag.has(OBJECT_FLAG_GHOST)) {
-				if (this.getSpeedY() > 0 && this.collideDown(obj)) {
-					this.onCollide(obj, gravityDir, DOWN, room);
-				} 
-				if (this.getSpeedY() < 0 && this.collideUp(obj)) {
-					this.onCollide(obj, gravityDir, UP, room);
+		if(!this.flag.has(OBJECT_FLAG_GHOST)){
+			GameObject objects[] = room.getObjects();
+			int gravityDir = room.getGravityDir();
+			
+			for(GameObject obj : objects) {
+				if (obj != null && obj != this && !obj.flag.has(OBJECT_FLAG_GHOST)) {
+					if (this.getSpeedY() > 0 && this.collideDown(obj)) {
+						this.onCollide(obj, gravityDir, DOWN, room);
+					} 
+					if (this.getSpeedY() < 0 && this.collideUp(obj)) {
+						this.onCollide(obj, gravityDir, UP, room);
+					}
+					if (this.getSpeedX() < 0 && this.collideLeft(obj)) {
+						this.onCollide(obj, gravityDir, LEFT, room);
+					}
+					if (this.getSpeedX() > 0 && this.collideRight(obj)) {
+						this.onCollide(obj, gravityDir, RIGHT, room);
+					}
+					 
 				}
-				if (this.getSpeedX() < 0 && this.collideLeft(obj)) {
-					this.onCollide(obj, gravityDir, LEFT, room);
-				}
-				if (this.getSpeedX() > 0 && this.collideRight(obj)) {
-					this.onCollide(obj, gravityDir, RIGHT, room);
-				}
-				 
 			}
 		}
 	}
@@ -412,7 +414,7 @@ public class GameObject {
 	public boolean collideLeft(GameObject obj){
 		if( (x - shape.getWidth() / 2 <= obj.getX() + obj.shape.getWidth() / 2) &&
 			(x + shape.getWidth() / 2 >= obj.getX()) && 
-			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 5) && 
+			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 10) && 
 			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2)) {
 			return true;
 		} else {
@@ -423,7 +425,7 @@ public class GameObject {
 	public boolean collideRight(GameObject obj){
 		if( (x - shape.getWidth() / 2 <= obj.getX()) && 
 			(x + shape.getWidth() / 2 >= obj.getX() - obj.shape.getWidth() / 2) && 
-			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 5) && 
+			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 10) && 
 			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2)) {
 			return true;
 		} else {
@@ -432,7 +434,7 @@ public class GameObject {
 	}
 	
 	public boolean collideDown(GameObject obj){
-		if( (x + shape.getWidth() / 2 > obj.getX() - obj.shape.getWidth() / 2 + 5) && 
+		if( (x + shape.getWidth() / 2 > obj.getX() - obj.shape.getWidth() / 2 + 10) && 
 			(x - shape.getWidth() / 2 + 5< obj.getX() + obj.shape.getWidth() / 2) && 
 			(y - shape.getHeight() / 2 < obj.getY() ) && 
 			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2)){
@@ -444,7 +446,7 @@ public class GameObject {
 	
 	
 	public boolean collideUp(GameObject obj){
-		if( (x + shape.getWidth() / 2 > obj.getX() - obj.shape.getWidth() / 2 + 5) && 
+		if( (x + shape.getWidth() / 2 > obj.getX() - obj.shape.getWidth() / 2 + 10) && 
 			(x - shape.getWidth() / 2 + 5 < obj.getX() + obj.shape.getWidth() / 2) && 
 			(y - shape.getHeight() / 2 < obj.getY() + obj.shape.getHeight() / 2) && 
 			(y + shape.getHeight() / 2 > obj.getY())){
