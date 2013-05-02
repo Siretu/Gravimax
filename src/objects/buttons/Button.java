@@ -1,4 +1,4 @@
-package objects;
+package objects.buttons;
 
 import java.awt.Font;
 
@@ -7,8 +7,10 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
-public class Button {
+public abstract class Button {
 	protected Color standardColor;
 	protected Color highlightColor;
 	protected TrueTypeFont font;
@@ -43,13 +45,15 @@ public class Button {
 		float mouseY = gc.getInput().getMouseY();
 		if(mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y+height){
 			highlightFont.drawString(x, y, text, highlightColor);
+			if(gc.getInput().isMousePressed(0)){
+				this.onClick(gc,g,game);
+			}
 		} else {
 			font.drawString(x + (highlightWidth - width) / 2, y + (highlightHeight - height) / 2, text, standardColor);
 		}
-		if(gc.getInput().isMousePressed(0)){
-			game.enterState(1);
-		}
 	}
+	
+	public abstract void onClick(GameContainer gc, Graphics g, StateBasedGame game);
 
 	
 

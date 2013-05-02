@@ -2,7 +2,8 @@ package main.states;
 
 import java.awt.Font;
 
-import objects.Button;
+import objects.buttons.Button;
+import objects.buttons.NewGameButton;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -27,8 +28,8 @@ public class MenuState extends BasicGameState{
 		redspiral = new Image("data/redspiral.png");
 		bluespiral = new Image("data/bluespiral.png");
 		greenspiral = new Image("data/greenspiral.png");
-		buttons = new Button[10];
-		buttons[0] = new Button(Color.blue,Color.red,550,100,"New game");
+		buttons = new Button[10];	
+		buttons[0] = new NewGameButton(Color.blue,Color.red,550,100,"New game");
 		
 	}
 
