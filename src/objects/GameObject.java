@@ -38,6 +38,10 @@ public class GameObject {
 	protected static final int BLOCK_YELLOW = 4;
 	protected static final int BLOCK_BLACK = 5;
 	
+	/**
+	 * Flags class to handle flags for special object attributes.
+	 *
+	 */
 	public class Flags {
 		int flag = 0x00000000;
 		
@@ -161,54 +165,6 @@ public class GameObject {
 		this.x_speed = Math.max(-this.maxSpeed, Math.min(this.maxSpeed,this.x_speed));
 	}
 	
-	/*
-	public void onUpdate(int gravityDir, float gravity) {
-		this.x_accel = 0;
-		this.y_accel = 0;
-		if(moveLeft == false && moveRight == false) {
-			if(gravityDir == UP || gravityDir == DOWN) {
-				this.stopMoveX();
-			} else {
-				this.stopMoveY();
-			}
-		}
-		if(moveLeft) {
-			switch(gravityDir) {
-			case UP: this.x_accel = this.accel; break;
-			case DOWN: this.x_accel = -this.accel; break;
-			case LEFT: this.y_accel = -this.accel; break;
-			case RIGHT: this.y_accel = this.accel; break;
-			}
-		}
-		if(moveRight) {
-			switch(gravityDir) {
-			case UP: this.x_accel = -this.accel; break;
-			case DOWN: this.x_accel = this.accel; break;
-			case LEFT: this.y_accel = this.accel; break;
-			case RIGHT: this.y_accel = -this.accel; break;
-			}
-		}
-		
-		if(this.flag.has(OBJECT_FLAG_GRAVITY)) {
-			switch(gravityDir) {
-			case UP: this.y_accel = -gravity; break;
-			case DOWN: this.y_accel = gravity; break;
-			case LEFT: this.x_accel = -gravity; break;
-			case RIGHT: this.x_accel = gravity; break;
-			}
-		}
-		
-		this.y_speed += y_accel;
-		this.x_speed += x_accel;
-		
-		if(this.x_speed > this.x_speed_max) this.x_speed = this.x_speed_max;
-		if(this.x_speed < -this.x_speed_max) this.x_speed = -this.x_speed_max;
-		if(this.y_speed > this.y_speed_max) this.y_speed = this.y_speed_max;
-		if(this.y_speed < -this.y_speed_max) this.y_speed = -this.y_speed_max;
-		
-		onAnimate();
-	}*/
-	
 	private void jump(int gravityDir) {
 		if(this.canJump) {
 			switch(gravityDir) {
@@ -219,58 +175,16 @@ public class GameObject {
 			}
 		}
 	}
-	
-	/*
-	
-	private void stopMoveX() {
-		if(this.x_speed > 0) {
-	        this.x_accel = -1;
-	    }
 
-	    if(this.x_speed < 0) {
-	        this.x_accel = 1;
-	    }
-
-	    if(this.x_speed < 2.0f && this.x_speed > -2.0f) {
-	        this.x_accel = 0;
-	        this.x_speed = 0;
-	    }
-	}
-	
-	private void stopMoveY() {
-		if(this.y_speed > 0) {
-	        this.y_accel = -1;
-	    }
-
-	    if(this.y_speed < 0) {
-	        this.y_accel = 1;
-	    }
-
-	    if(this.y_speed < 2.0f && this.y_speed > -2.0f) {
-	        this.y_accel = 0;
-	        this.y_speed = 0;
-	    }
-	}
-
-	public void onMove(GameObject[] objects, int gravityDir, Room room) {
-		if(this.x_speed == 0 && this.y_speed == 0)
-			return;
-				
-		this.x += this.x_speed;
-		this.y += this.y_speed;
-
-		if(!this.flag.has(OBJECT_FLAG_GHOST)) {
-		if(gravityDir == DOWN && this.y_speed == 0.5f)
-			return;
-			
-		this.checkCollisions(objects, gravityDir, room);
-		}
-	}
-	*/
 	private void onAnimate() {
 		//TODO
 	}
 	
+	/**
+	 * Checks this object's collisions. If it collides with an object, it'll run onCollide on it and handle the collision.
+	 * If the object or the object it collides with has the GHOST flag, they wont collide.
+	 * @param room the room to check for collisions in.
+	 */
 	private void checkCollisions(Room room) {
 		if(!this.flag.has(OBJECT_FLAG_GHOST)){
 			GameObject objects[] = room.getObjects();
@@ -307,76 +221,6 @@ public class GameObject {
 		g.fill(shape);
 		g.setColor(oldC);
 	}
-	/*
-	public boolean handleCollisions(GameObject[] objects, Room r, GameContainer gc){
-		for(GameObject obj : objects){
-			if(obj != null && obj != this){ // Avoid nullpointers and colliding with itself
-				if(this.getSpeedX() < 0 && this.collideLeft(obj)){
-					this.setSpeedX(0);
-					if(r.getxGravity() < 0 && this instanceof Player){ // Reset jump
-						// Ugly hack to do player-specific stuff. Thought a lot about it and can't think of a nice way.
-						((Player) this).setJumping(false); 
-					}
-
-					this.correctCollisionLeft(obj);
-					if(obj.isColored()){
-						r.rotateGravity(gc, obj.getColorID(),this);
-					} else {
-						r.setyGravity(0);
-						r.setxGravity(-r.getGravity());
-					}
-					System.out.println("Collided left");
-				}
-				if(this.getSpeedX() > 0 && this.collideRight(obj)){
-					this.setSpeedX(0);
-					if(r.getxGravity() > 0 && this instanceof Player){ // Reset jump
-						// Ugly hack to do player-specific stuff. Thought a lot about it and can't think of a nice way.
-						((Player) this).setJumping(false); 
-					}
-					this.correctCollisionRight(obj);
-					if(obj.isColored()){
-						r.rotateGravity(gc, obj.getColorID(),this);
-					} else {
-						r.setyGravity(0);
-						r.setxGravity(r.getGravity());
-						
-					}
-					System.out.println("Collided right");
-				}
-				if(this.getSpeedY() > 0 && this.collideDown(obj)){
-					this.setSpeedY(0);
-					if(r.getyGravity() > 0 && this instanceof Player){ // Reset jump
-						// Ugly hack to do player-specific stuff. Thought a lot about it and can't think of a nice way.
-						((Player) this).setJumping(false); 
-					}
-					if(obj.isColored()){
-						r.rotateGravity(gc, obj.getColorID(),this);
-					}
-					r.setxGravity(0);
-					r.setyGravity(r.getGravity());
-					this.correctCollisionDown(obj);
-				}
-				if(this.getSpeedY() < 0 && this.collideUp(obj)){
-					this.setSpeedY(0);
-					if(r.getyGravity() < 0 && this instanceof Player){ // Reset jump
-						// Ugly hack to do player-specific stuff. Thought a lot about it and can't think of a nice way.
-						((Player) this).setJumping(false); 
-					}
-
-					this.correctCollisionUp(obj);
-					if(obj.isColored()){
-						r.rotateGravity(gc, obj.getColorID(),this);
-					} else {
-						r.setxGravity(0);
-						r.setyGravity(-r.getGravity());
-					}
-					System.out.println("Collided right");
-				}
-			}
-		}
-		
-		return true;
-	}*/
 	
 	public void correctCollisionLeft(GameObject obj){
 		this.setX(obj.getX() + (obj.shape.getWidth() + this.shape.getWidth()) /2);
@@ -394,35 +238,10 @@ public class GameObject {
 		this.setY(obj.getY() - (obj.shape.getHeight() + this.shape.getHeight()) /2);
 	}
 	
-	/*
-	public boolean collideLeft(GameObject obj){
-		if( (x - shape.getWidth() / 2 <= obj.getX() + obj.shape.getWidth() / 2) &&
-			(x + shape.getWidth() / 2 >= obj.getX()) && 
-			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 5) && 
-			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2) &&
-			(Math.min(Math.abs(y + shape.getHeight() / 2 - obj.getY() + obj.shape.getHeight() / 2), // The minimum overlapping distance
-					Math.abs(y - shape.getHeight() / 2 - obj.getY() - obj.shape.getHeight() / 2))) > // should be bigger than the amount that need correcting.
-			(Math.abs(x - shape.getWidth() - obj.getX() - obj.shape.getWidth() / 2))){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public boolean collideRight(GameObject obj){
-		if( (x - shape.getWidth() / 2 <= obj.getX()) && 
-			(x + shape.getWidth() / 2 >= obj.getX() - obj.shape.getWidth() / 2) && 
-			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 5) && 
-			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2) &&
-			(Math.min(Math.abs(y + shape.getHeight() / 2 - obj.getY() + obj.shape.getHeight() / 2), // The minimum overlapping distance
-					Math.abs(y - shape.getHeight() / 2 - obj.getY() - obj.shape.getHeight() / 2))) > // should be bigger than the amount that need correcting.
-			(Math.abs(x + shape.getWidth() - obj.getX() + obj.shape.getWidth() / 2))){
-			return true;
-		} else {
-			return false;
-		}
-	}*/
-	
+	/**
+	 * @param obj object to check collisions with.
+	 * @return true if this collides with obj from the left, false otherwise.
+	 */
 	public boolean collideLeft(GameObject obj){
 		if( (x - shape.getWidth() / 2 <= obj.getX() + obj.shape.getWidth() / 2) &&
 			(x + shape.getWidth() / 2 >= obj.getX()) && 
@@ -434,6 +253,10 @@ public class GameObject {
 		}
 	}
 	
+	/**
+	 * @param obj object to check collisions with.
+	 * @return true if this collides with obj from the right, false otherwise.
+	 */
 	public boolean collideRight(GameObject obj){
 		if( (x - shape.getWidth() / 2 <= obj.getX()) && 
 			(x + shape.getWidth() / 2 >= obj.getX() - obj.shape.getWidth() / 2) && 
@@ -445,6 +268,10 @@ public class GameObject {
 		}
 	}
 	
+	/**
+	 * @param obj object to check collisions with.
+	 * @return true if this collides with obj from below, false otherwise.
+	 */
 	public boolean collideDown(GameObject obj){
 		if( (x + shape.getWidth() / 2 > obj.getX() - obj.shape.getWidth() / 2 + 10) && 
 			(x - shape.getWidth() / 2 + 5< obj.getX() + obj.shape.getWidth() / 2) && 
@@ -456,7 +283,10 @@ public class GameObject {
 		}
 	}
 	
-	
+	/**
+	 * @param obj object to check collisions with.
+	 * @return true if this collides with obj from above, false otherwise.
+	 */
 	public boolean collideUp(GameObject obj){
 		if( (x + shape.getWidth() / 2 > obj.getX() - obj.shape.getWidth() / 2 + 10) && 
 			(x - shape.getWidth() / 2 + 5 < obj.getX() + obj.shape.getWidth() / 2) && 
@@ -481,7 +311,6 @@ public class GameObject {
 	 */
 	public void setX(float x) {
 		this.x = x;
-//		System.out.println("modified x");
 	}
 
 	/**

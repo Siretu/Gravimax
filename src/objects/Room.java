@@ -131,8 +131,12 @@ public class Room {
 		}
 	}
 	
-	
-	public void rotateGravity(int side, GameObject p){
+	/**
+	 * Rotates the entire screen and all objects in the room towards the specified side. 
+	 * It also switches gravity downwards.
+	 * @param side specifies the side to rotate downwards.
+	 */
+	public void rotateGravity(int side){
 		this.setGravityDir(DOWN);
 		this.gravityColor = side;
 		int turn = -1;
@@ -143,7 +147,6 @@ public class Room {
 		} else if(objects[side].getX() == 775 && objects[side].getY() == 400){
 			turn = 3;
 		} else {
-//			System.out.println("Fucked up turn: "+ objects[side].getX() + " | " + objects[side].getY());
 			return;
 		}
 		for(GameObject obj : objects){
@@ -162,10 +165,6 @@ public class Room {
 					obj.setX(tempY * (-turn + 2) + gcWidth * (1/2f*turn - 1/2f));
 					obj.setY(tempX * (turn - 2) + gcHeight * (-1/2f*turn + 3/2f));
 					obj.shape = obj.shape.transform(Transform.createRotateTransform((float) (Math.PI/2)));
-					if(obj.equals(p)){
-						System.out.println("Yes, this is player");
-						System.out.println(obj.shape.getX() + "/" + obj.shape.getY());
-					}
 					System.out.println("Converted from: " + tempX + "/" + tempY + " to: " + obj.getX() + "/" + obj.getY());
 				}
 			}
@@ -218,10 +217,16 @@ public class Room {
 		return gravityDir;
 	}
 	
+	/**
+	 * @param gravityDir the gravity direction to set
+	 */
 	public void setGravityDir(int gravityDir) {
 		this.gravityDir = gravityDir;
 	}
 	
+	/**
+	 * @return the objects in the room
+	 */
 	public GameObject[] getObjects() {
 		return objects;
 	}

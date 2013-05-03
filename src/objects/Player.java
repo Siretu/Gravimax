@@ -51,7 +51,7 @@ public class Player extends GameObject {
 					room.setGravityDir(colDir);
 				} else {
 					if(obj.getColorID() != room.getGravityColor()) {
-						room.rotateGravity(obj.getColorID(), this);
+						room.rotateGravity(obj.getColorID());
 					} else {
 						room.setGravityDir(DOWN);
 					}
@@ -60,41 +60,4 @@ public class Player extends GameObject {
 		}
 	}
 
-	/*
-	public void resetJump(){
-		this.setJumping(false); 
-	}
-	
-	public void moveLeft(Room r){
-		if(r.getyGravity() != 0){
-			setSpeedX(-speed * Math.signum(r.getyGravity()));
-		}
-		if(r.getxGravity() != 0){
-			setSpeedY(speed * Math.signum(r.getxGravity()));
-		}
-	}
-	
-	public void moveRight(Room r){
-		if(r.getyGravity() != 0){
-			setSpeedX(speed * Math.signum(r.getyGravity()));
-		}
-		if(r.getxGravity() != 0){
-			setSpeedY(-speed * Math.signum(r.getxGravity()));
-		}
-	}
-	
-	public void jump(Room r){
-		if(r.getyGravity() > 0){
-			setSpeedY(-jumpSpeed);
-		} else if(r.getyGravity() < 0){
-			setSpeedY(jumpSpeed);
-		}
-		if(r.getxGravity() > 0){
-			setSpeedX(-jumpSpeed);
-		} else if(r.getxGravity() < 0){
-			setSpeedX(jumpSpeed);
-		}
-		setJumping(true);
-	}
-	*/
 }
