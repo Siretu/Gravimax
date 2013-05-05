@@ -38,7 +38,7 @@ public class GameState extends BasicGameState{
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		System.out.println("Initializing");
 		
-		r = new Room();
+		r = new MapReader("level1.map").getRoom();
 		r.onInit(gc);
 		
 		Image img = new Image("data/test_particle.png");

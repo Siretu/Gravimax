@@ -37,7 +37,7 @@ public class Room {
 
 	private GameObject[] objects;
 	
-	public Room(Color c, float friction, float gravity, float xGrav, float yGrav){
+	public Room(Color c, float friction, float gravity){
 		this.background = c;
 		this.friction = friction;
 		this.gravity = gravity;
@@ -53,22 +53,10 @@ public class Room {
 	public void onInit(GameContainer gc) {
 		gcWidth = gc.getWidth();
 		gcHeight = gc.getHeight();
-		  
-		//TEMPORARY; Need to implement RoomReader
-		GameObject p = new Player(new Rectangle(400,600,50,50));
 		
-		objects = new GameObject[20];
-		objects[0] = p;
-		objects[1] = new GameObject(new Rectangle(50,750,700,50),Color.blue,BLOCK_BLUE);
-		objects[2] = new GameObject(new Rectangle(0,50,50,700),Color.red,BLOCK_RED);
-		objects[3] = new GameObject(new Rectangle(50,0,700,50),Color.green,BLOCK_GREEN);
-		objects[4] = new GameObject(new Rectangle(750,50,50,700),Color.yellow,BLOCK_YELLOW);
-		objects[5] = new GameObject(new Rectangle(680,680,50,50), Color.yellow,BLOCK_YELLOW);
-		objects[6] = new GameObject(new Rectangle(150,560,100,100),Color.black,BLOCK_BLACK);
-		
-		for(GameObject go : objects) {
-			if(go != null) {
-				go.onInit();
+		for(GameObject obj : objects) {
+			if(obj != null) {
+				obj.onInit();
 			}
 		}
 		
@@ -229,6 +217,10 @@ public class Room {
 	 */
 	public GameObject[] getObjects() {
 		return objects;
+	}
+	
+	public void setObjects(GameObject[] obj) {
+		objects = obj;
 	}
 	
 	public int getGravityColor() {
