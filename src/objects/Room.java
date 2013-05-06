@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.command.InputProvider;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Transform;
@@ -39,6 +40,7 @@ public class Room {
 	private InputProvider provider;
 
 	private GameObject[] objects;
+	private ParticleSystem particleSystem;
 	
 	public Room(Color c, float friction, float gravity){
 		this.background = c;
@@ -53,7 +55,9 @@ public class Room {
 		this.gravity = 0.5f;
 	}
 	
-	public void onInit(GameContainer gc) {
+	public void onInit(GameContainer gc) throws SlickException {
+		Image img = new Image("data/test_particle.png");
+		particleSystem = new ParticleSystem(img, 1500);
 		gcWidth = gc.getWidth();
 		gcHeight = gc.getHeight();
 		
@@ -63,55 +67,17 @@ public class Room {
 			}
 		}
 		
-		onInput(gc);
 	}
 	
-	public void onInput(GameContainer gc) {
-		Input i = gc.getInput(); //Get reference to instance of Input
-		KeyListener kl = new KeyListener() { //Define an implementation of KeyListener
-			@Override
-		    public void inputStarted() {} 
-			  
-		   @Override
-		    public void inputEnded() {}
 
-		    @Override
-		    public boolean isAcceptingInput() {
-		       return true;
-		    }
-
-		    @Override
-		    public void setInput(Input arg0) {}
-
-		    @Override
-		    public void keyPressed(int key, char c) {);
-		    	switch(key) {
-		    	case Input.KEY_A: objects[0].moveLeft(); break;
-		    	case Input.KEY_D: objects[0].moveRight(); break;
-		    	case Input.KEY_W: objects[0].tryJump(gravityDir); break;
-		    	case Input.KEY_SPACE: objects[0].tryJump(gravityDir); break;
-		    	default: break;
-		    	}
-		    }
-
-		    @Override
-		    public void keyReleased(int key, char c) {
-		    	switch(key) {
-		    	case Input.KEY_A: objects[0].stopLeft(); break;
-		    	case Input.KEY_D: objects[0].stopRight(); break;
-		    	default: break;
-		    	}
-		    }
-		  };
-		  i.addKeyListener(kl); //Add the KeyListener to Input so that Input can tell KeyListener when events take place
-	}
 	
-	public void onUpdate() {
+	public void onUpdate(int delta) {
 		for(GameObject obj : objects) {
 			if(obj != null) {
 				obj.onUpdate(this);
 			}
 		}
+		particleSystem.update(delta);
 	}
 	
 	public void onRender(Graphics g) {
@@ -121,6 +87,7 @@ public class Room {
 				go.onRender(g);
 			}
 		}
+		particleSystem.render();
 	}
 	
 	/**

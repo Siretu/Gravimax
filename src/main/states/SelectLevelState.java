@@ -1,5 +1,6 @@
 package main.states;
 
+import java.awt.Font;
 import java.io.File;
 import java.io.FilenameFilter;
 
@@ -11,6 +12,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.state.BasicGameState;
@@ -21,12 +23,12 @@ public class SelectLevelState extends BasicGameState{
 	public static final int startLevelX = 100;
 	public static final int startLevelY = 100;
 	public static final int levelGap = 20;
-
 	
 	private Level[] levels;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
+
 		Color[] colors = {Color.red, Color.blue, Color.green, Color.yellow};
 		
 		File dir = new File("data/maps");
@@ -43,7 +45,7 @@ public class SelectLevelState extends BasicGameState{
 		int currIndex = 0;
 		
 		for(File f : foundFiles){
-			levels[currIndex] = new Level(f.getName(), currX, currY,colors[currIndex % colors.length]);
+			levels[currIndex] = new Level(f.getName(), currX, currY,colors[currIndex % colors.length],currIndex+1);
 			currIndex++;
 			currX += levelGap + Level.levelWidth;
 			if(currX+Level.levelWidth > gc.getWidth() - startLevelX){
