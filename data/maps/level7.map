@@ -1,8 +1,10 @@
-3
-//Första saken som ska stå i filen är antalet object som ska skapas
-//vad det är:x:y:width:height:färg - färg kan anges som text (om det är en av slicks standard färger eller med färgkod)
-player:400:600:50:50 // //skapar en kommentar men kan ej ha ett mellanrum framför sig :P 
-map:680:680:50:50:yellow
-map:150:560:100:100:black
-//room:130,130,130:0.8f:0.5f //färg:friktion:gravitation -- ifall room inte specifieras så sätts det här till standard
+7
+player:200:680:50:50
+map:500:600:50:150:black
+map:50:450:650:50:yellow
+map:50:200:750:50:yellow
+//map:50:425:650:25:yellow
+map:600:200:50:60:red
+goal:75:350
+
 

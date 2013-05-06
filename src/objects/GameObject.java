@@ -25,6 +25,7 @@ public class GameObject {
 	protected static final int OBJECT_FLAG_GRAVITY = 0x00000001;
 	protected static final int OBJECT_FLAG_GHOST = 0x00000002;
 	protected static final int OBJECT_FLAG_MAPONLY = 0x00000004;
+	protected static final int OBJECT_FLAG_GOAL = 0x00000008;
 	
 	protected static final int UP = 10;
 	protected static final int LEFT = 11;
@@ -77,7 +78,7 @@ public class GameObject {
 		this.flag.add(OBJECT_FLAG_MAPONLY);
 	}
 	
-	public void onInit() {
+	public void onInit(Room r) {
 	}
 	
 	public void onUpdate(Room room) {

@@ -62,7 +62,7 @@ public class Level {
 	}
 	
 	public void onClick(GameContainer gc, Graphics g, StateBasedGame game){
-		((Game)game).setLevel(levelPath);
+		((Game)game).setLevel("" + level);
 		game.enterState(1, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
 	}
 }

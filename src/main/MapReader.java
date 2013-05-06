@@ -3,10 +3,12 @@ package main;
 import java.io.*;
 
 import objects.GameObject;
+import objects.Goal;
 import objects.Player;
 import objects.Room;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 public class MapReader {
@@ -94,6 +96,15 @@ public class MapReader {
 			} else if(contents[0].equals("room")) {
 				makeCustomRoom(contents);
 				System.out.println("Made custom room");
+			} else if(contents[0].equals("goal")){
+				try {
+					objects[curIndex] = new Goal(new Rectangle(Integer.parseInt(contents[1]),Integer.parseInt(contents[2]),50,50), Color.red);
+				} catch (NumberFormatException e) {
+					System.err.printf("%s%n in MapReader", e);
+				} catch (SlickException e) {
+					System.err.printf("%s%n in MapReader", e);
+				}
+				curIndex++;
 			}
 		}
 	}

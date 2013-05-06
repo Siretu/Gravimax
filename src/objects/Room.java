@@ -40,7 +40,9 @@ public class Room {
 	private InputProvider provider;
 
 	private GameObject[] objects;
-	private ParticleSystem particleSystem;
+	public ParticleSystem particleSystem;
+	
+	public StateBasedGame game;
 	
 	public Room(Color c, float friction, float gravity){
 		this.background = c;
@@ -55,15 +57,17 @@ public class Room {
 		this.gravity = 0.5f;
 	}
 	
-	public void onInit(GameContainer gc) throws SlickException {
+	public void onInit(GameContainer gc, StateBasedGame game) throws SlickException {
 		Image img = new Image("data/test_particle.png");
 		particleSystem = new ParticleSystem(img, 1500);
 		gcWidth = gc.getWidth();
 		gcHeight = gc.getHeight();
 		
+		this.game = game;
+		
 		for(GameObject obj : objects) {
 			if(obj != null) {
-				obj.onInit();
+				obj.onInit(this);
 			}
 		}
 		
@@ -192,6 +196,22 @@ public class Room {
 	
 	public void setObjects(GameObject[] obj) {
 		objects = obj;
+	}
+	
+	public void addObject(GameObject obj){
+		System.out.println("Tried to add object");
+		for(int i = 0; i<objects.length;i++){
+			if(objects[i] == null){
+				objects[i] = obj;
+				System.out.println("Added object");
+				return;
+			}
+		}
+		GameObject[] newObjs = new GameObject[objects.length*2];
+		newObjs[objects.length] = obj;
+		System.arraycopy(objects, 0, newObjs, 0, objects.length);
+		objects = newObjs;
+		
 	}
 	
 	public int getGravityColor() {

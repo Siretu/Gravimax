@@ -5,6 +5,7 @@ import java.io.File;
 import main.Game;
 import main.MapReader;
 import objects.GameObject;
+import objects.Goal;
 import objects.Player;
 import objects.Room;
 
@@ -24,6 +25,8 @@ import org.newdawn.slick.particles.ParticleIO;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
 public class GameState extends BasicGameState{
 	public static final int ID = 1;
@@ -36,8 +39,6 @@ public class GameState extends BasicGameState{
 	
 	public boolean change = false;
 	
-	private ParticleSystem system;
-	ConfigurableEmitter emitter;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {}
@@ -46,15 +47,25 @@ public class GameState extends BasicGameState{
 	public void enter(GameContainer gc, StateBasedGame game) throws SlickException {
 		System.out.println("Initializing");
 		
-		r = new MapReader(((Game)game).getLevel()).getRoom();
-		r.onInit(gc);
+		r = new MapReader("level" + ((Game)game).getLevel()+".map").getRoom();
+//		r.addObject(new Goal(new Rectangle(400,400,50,50),Color.red));
+		r.onInit(gc,game);
 		
-		onInput(gc);
+		
+		
+		onInput(gc,game);
 	}
 	
-	public void onInput(GameContainer gc) {
+	public void onInput(GameContainer gc, StateBasedGame game) {
 		Input i = gc.getInput(); //Get reference to instance of Input
 		KeyListener kl = new KeyListener() { //Define an implementation of KeyListener
+			StateBasedGame game;
+			
+			public KeyListener init(StateBasedGame g){
+				this.game = g;
+				return this;
+			}
+			
 			@Override
 		    public void inputStarted() {} 
 			  
@@ -76,6 +87,7 @@ public class GameState extends BasicGameState{
 		    	case Input.KEY_D: r.getObjects()[0].moveRight(); break;
 		    	case Input.KEY_W: r.getObjects()[0].tryJump(r.getGravityDir()); break;
 		    	case Input.KEY_SPACE: r.getObjects()[0].tryJump(r.getGravityDir()); break;
+		    	case Input.KEY_ESCAPE: game.enterState(3, new FadeOutTransition(Color.black), new FadeInTransition(Color.black)); break;
 		    	default: break;
 		    	}
 		    }
@@ -88,7 +100,7 @@ public class GameState extends BasicGameState{
 		    	default: break;
 		    	}
 		    }
-		  };
+		  }.init(game);
 		  i.addKeyListener(kl); //Add the KeyListener to Input so that Input can tell KeyListener when events take place
 	}
 
