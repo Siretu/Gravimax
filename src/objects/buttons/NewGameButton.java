@@ -15,7 +15,7 @@ public class NewGameButton extends Button {
 
 	@Override
 	public void onClick(GameContainer gc, Graphics g, StateBasedGame game) {
-		game.enterState(1, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+		game.enterState(4, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
 	}
 
 }

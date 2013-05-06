@@ -2,12 +2,13 @@ package main;
 
 import main.states.GameState;
 import main.states.MenuState;
+import main.states.SelectLevelState;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class Game extends StateBasedGame{
-
+	public String level;
 	
 	public Game() {
 		super("Gravimax");
@@ -27,7 +28,15 @@ public class Game extends StateBasedGame{
 	public void initStatesList(GameContainer arg0) throws SlickException {
 		addState(new MenuState());
 		addState(new GameState());
-		
-		
+		addState(new SelectLevelState());
 	}
+
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
+	}
+	
 }

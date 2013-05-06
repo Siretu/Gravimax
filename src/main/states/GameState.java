@@ -2,6 +2,8 @@ package main.states;
 
 import java.io.File;
 
+import main.Game;
+import main.MapReader;
 import objects.GameObject;
 import objects.Player;
 import objects.Room;
@@ -33,12 +35,15 @@ public class GameState extends BasicGameState{
 	
 	private ParticleSystem system;
 	ConfigurableEmitter emitter;
+
+	@Override
+	public void init(GameContainer gc, StateBasedGame game) throws SlickException {}
 	
 	@Override
-	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
+	public void enter(GameContainer gc, StateBasedGame game) throws SlickException {
 		System.out.println("Initializing");
 		
-		r = new MapReader("level1.map").getRoom();
+		r = new MapReader(((Game)game).getLevel()).getRoom();
 		r.onInit(gc);
 		
 		Image img = new Image("data/test_particle.png");
@@ -62,5 +67,6 @@ public class GameState extends BasicGameState{
 	public int getID() {
 		return ID;
 	}
+
 
 }

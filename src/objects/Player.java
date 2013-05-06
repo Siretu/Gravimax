@@ -32,7 +32,7 @@ public class Player extends GameObject {
 			case DOWN:
 				this.correctCollisionDown(obj);
 				this.y_speed = 0;
-				System.out.println("Collided: " + gravityDir + " " + colDir);
+//				System.out.println("Collided: " + gravityDir + " " + colDir);
 				break;
 			case LEFT: 
 				this.correctCollisionLeft(obj); 

@@ -1,4 +1,4 @@
-package main.states;
+package main;
 
 import java.io.*;
 
@@ -21,6 +21,10 @@ public class MapReader {
 	private Room room;
 	
 	public MapReader(String filename) {
+		initiateRoom(filename);
+	}
+	
+	public void initiateRoom(String filename){
 		System.out.println("Opening file");
 		String mapLoc = "data/maps/";
 		filename = mapLoc.concat(filename);
@@ -73,7 +77,7 @@ public class MapReader {
 			}
 			if(indexOfComment != -1) {
 				System.out.println("Line starting with comment");
-				line = line.substring(0, indexOfComment);
+				line = line.substring(0, indexOfComment).trim();
 			} else {
 				System.out.println("Line without comment");
 			}
@@ -84,12 +88,10 @@ public class MapReader {
 				objects[curIndex] = makeMapObject(contents);
 				System.out.println("Made map object");
 				curIndex++;
-			}
-			if(contents[0].equals("player")) {
+			} else if(contents[0].equals("player")) {
 				objects[0] = new Player(new Rectangle(Integer.parseInt(contents[1]),Integer.parseInt(contents[2]),Integer.parseInt(contents[3]),Integer.parseInt(contents[4])));
 				System.out.println("Made player");
-			}
-			if(contents[0].equals("room")) {
+			} else if(contents[0].equals("room")) {
 				makeCustomRoom(contents);
 				System.out.println("Made custom room");
 			}

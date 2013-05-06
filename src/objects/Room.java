@@ -10,6 +10,9 @@ import org.newdawn.slick.command.InputProvider;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.particles.ParticleSystem;
+import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
 public class Room {
 	private static final int UP = 10;
@@ -81,11 +84,12 @@ public class Room {
 		    public void setInput(Input arg0) {}
 
 		    @Override
-		    public void keyPressed(int key, char c) {
+		    public void keyPressed(int key, char c) {);
 		    	switch(key) {
 		    	case Input.KEY_A: objects[0].moveLeft(); break;
 		    	case Input.KEY_D: objects[0].moveRight(); break;
 		    	case Input.KEY_W: objects[0].tryJump(gravityDir); break;
+		    	case Input.KEY_SPACE: objects[0].tryJump(gravityDir); break;
 		    	default: break;
 		    	}
 		    }
