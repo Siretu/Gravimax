@@ -1,5 +1,7 @@
 package objects;
 
+import java.util.Arrays;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -28,6 +30,7 @@ public class GameObject {
 	protected static final int OBJECT_FLAG_GHOST = 0x00000002;
 	protected static final int OBJECT_FLAG_MAPONLY = 0x00000004;
 	protected static final int OBJECT_FLAG_GOAL = 0x00000008;
+	protected static final int OBJECT_FLAG_HOSTILE = 0x00000010;
 	
 	protected static final int UP = 10;
 	protected static final int LEFT = 11;
@@ -52,6 +55,7 @@ public class GameObject {
 		
 		public boolean has(int n) {
 			int temp = flag & n;
+//			System.out.println(temp);
 			if(temp == n)
 				return true;
 			return false;
@@ -86,7 +90,7 @@ public class GameObject {
 	public void onUpdate(Room room) {
 		if(this.flag.has(OBJECT_FLAG_MAPONLY)) 
 			return;
-		
+//		System.out.println(Arrays.toString(room.getObjects()));
 		this.checkJumpStatus(room.getObjects());
 		this.handleInput(room.getGravityDir(), room.getGravity());
 		this.onMove(room);
@@ -175,7 +179,6 @@ public class GameObject {
 				fx = new Sound("data/sounds/jump.wav");
 				fx.play(1f,0.1f);
 			} catch (SlickException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -198,25 +201,22 @@ public class GameObject {
 	 * @param room the room to check for collisions in.
 	 */
 	private void checkCollisions(Room room) {
-		if(!this.flag.has(OBJECT_FLAG_GHOST)){
-			GameObject objects[] = room.getObjects();
-			int gravityDir = room.getGravityDir();
-			
-			for(GameObject obj : objects) {
-				if (obj != null && obj != this && !obj.flag.has(OBJECT_FLAG_GHOST)) {
-					if (this.getSpeedY() > 0 && this.collideDown(obj)) {
-						this.onCollide(obj, gravityDir, DOWN, room);
-					} 
-					if (this.getSpeedY() < 0 && this.collideUp(obj)) {
-						this.onCollide(obj, gravityDir, UP, room);
-					}
-					if (this.getSpeedX() < 0 && this.collideLeft(obj)) {
-						this.onCollide(obj, gravityDir, LEFT, room);
-					}
-					if (this.getSpeedX() > 0 && this.collideRight(obj)) {
-						this.onCollide(obj, gravityDir, RIGHT, room);
-					}
-					 
+		GameObject objects[] = room.getObjects();
+		int gravityDir = room.getGravityDir();
+		
+		for(GameObject obj : objects) {
+			if (obj != null && obj != this) {
+				if (this.getSpeedY() > 0 && this.collideDown(obj)) {
+					this.onCollide(obj, gravityDir, DOWN, room);
+				} 
+				if (this.getSpeedY() < 0 && this.collideUp(obj)) {
+					this.onCollide(obj, gravityDir, UP, room);
+				}
+				if (this.getSpeedX() < 0 && this.collideLeft(obj)) {
+					this.onCollide(obj, gravityDir, LEFT, room);
+				}
+				if (this.getSpeedX() > 0 && this.collideRight(obj)) {
+					this.onCollide(obj, gravityDir, RIGHT, room);
 				}
 			}
 		}
@@ -224,6 +224,8 @@ public class GameObject {
 	
 	protected void onCollide(GameObject obj, int gravityDir, int colDir, Room room) {
 	}
+	
+	protected void die(Room room){}
 	
 	public void onRender(Graphics g){
 		this.shape.setCenterX(this.x);

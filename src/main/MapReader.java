@@ -6,6 +6,8 @@ import objects.GameObject;
 import objects.Goal;
 import objects.Player;
 import objects.Room;
+import objects.SpikeBall;
+import objects.Spikes;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.SlickException;
@@ -97,13 +99,13 @@ public class MapReader {
 				makeCustomRoom(contents);
 				System.out.println("Made custom room");
 			} else if(contents[0].equals("goal")){
-				try {
-					objects[curIndex] = new Goal(new Rectangle(Integer.parseInt(contents[1]),Integer.parseInt(contents[2]),50,50), Color.red);
-				} catch (NumberFormatException e) {
-					System.err.printf("%s%n in MapReader", e);
-				} catch (SlickException e) {
-					System.err.printf("%s%n in MapReader", e);
-				}
+				objects[curIndex] = new Goal(new Rectangle(Integer.parseInt(contents[1]),Integer.parseInt(contents[2]),50,50), Color.red);
+				curIndex++;
+			} else if(contents[0].equals("spikes")){
+				objects[curIndex] = new Spikes(new Rectangle(Integer.parseInt(contents[1]),Integer.parseInt(contents[2]),80,40),Color.red);
+				curIndex++;
+			} else if(contents[0].equals("spikeball")){
+				objects[curIndex] = new SpikeBall(new Rectangle(Integer.parseInt(contents[1]),Integer.parseInt(contents[2]),50,50),Color.red);
 				curIndex++;
 			}
 		}

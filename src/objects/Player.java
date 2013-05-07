@@ -31,12 +31,12 @@ public class Player extends GameObject {
 	
 	@Override
 	protected void onCollide(GameObject obj, int gravityDir, int colDir, Room room) {
-		
-		if(obj.flag.has(OBJECT_FLAG_MAPONLY)) {
-//			System.out.println("In collision");
-			if(obj.flag.has(OBJECT_FLAG_GOAL)){
-				completeLevel(room);
-			}
+		if(obj.flag.has(OBJECT_FLAG_GOAL)){
+			completeLevel(room);
+		} else if(obj.flag.has(OBJECT_FLAG_HOSTILE)){
+			die(room);
+		}
+		if(!obj.flag.has(OBJECT_FLAG_GHOST)){
 			if(gravityDir == colDir) {
 				this.canJump = true;
 			}
@@ -45,22 +45,18 @@ public class Player extends GameObject {
 			case UP: 
 				this.correctCollisionUp(obj); 
 				this.y_speed = 0;
-//				System.out.println("Collided: " + gravityDir + " " + colDir);
 				break;
 			case DOWN:
 				this.correctCollisionDown(obj);
 				this.y_speed = 0;
-//				System.out.println("Collided: " + gravityDir + " " + colDir);
 				break;
 			case LEFT: 
 				this.correctCollisionLeft(obj); 
 				this.x_speed = 0;
-//				System.out.println("Collided: " + gravityDir + " " + colDir);
 				break;
 			case RIGHT: 
 				this.correctCollisionRight(obj); 
 				this.x_speed = 0;
-//				System.out.println("Collided: " + gravityDir + " " + colDir);
 				break;
 			}
 	
@@ -78,13 +74,22 @@ public class Player extends GameObject {
 		}
 	}
 	
+	protected void die(Room room) {
+		try{
+			Sound fx = new Sound("data/sounds/death.wav");
+			fx.play(1f,0.2f);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+		room.game.enterState(1, new FadeOutTransition(Color.red), new FadeInTransition(Color.red));
+	}
+
 	protected void completeLevel(Room room){
 		room.timer.stop();
 		try {
 			Sound fx = new Sound("data/sounds/changelevel.wav");
 			fx.play(1f,0.2f);
 		} catch (SlickException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		int l = Integer.parseInt(((Game)room.game).getLevel());

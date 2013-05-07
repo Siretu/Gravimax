@@ -11,11 +11,15 @@ public class Goal extends GameObject {
 	public static final float scale = 0.15f;
 	private ConfigurableEmitter emitter;
 	
-	Image goal;
+	private Image goal;
 	
-	public Goal(Shape s, Color c) throws SlickException {
+	public Goal(Shape s, Color c){
 		super(s, c);
-		goal = new Image("data/redspiral.png");
+		try {
+			goal = new Image("data/redspiral.png");
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 		this.flag.add(OBJECT_FLAG_MAPONLY);
 		this.flag.add(OBJECT_FLAG_GOAL);
 		
@@ -33,14 +37,8 @@ public class Goal extends GameObject {
 		this.shape.setCenterY(this.y);
 		goal.draw(x-goal.getWidth()/2*scale,y-goal.getHeight()/2*scale,scale);
 		goal.rotate(5);
+	}
 
-		
-	}
-	
-	public void update(Room room){
-		System.out.println("Updating");
-		
-	}
 	
 	public void setX(float x) {
 		this.x = x;
