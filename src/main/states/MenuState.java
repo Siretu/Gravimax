@@ -3,7 +3,9 @@ package main.states;
 import java.awt.Font;
 
 import objects.buttons.Button;
+import objects.buttons.ExitButton;
 import objects.buttons.NewGameButton;
+import objects.buttons.SelectLevelButton;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -17,6 +19,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class MenuState extends BasicGameState{
 	public static final int ID = 3;
+	public static final int menuButtonStartX = 500;
+	public static final int menuButtonStartY = 100;
 	
 	private float rotation;
 	private Image redspiral;
@@ -32,9 +36,28 @@ public class MenuState extends BasicGameState{
 		bluespiral = new Image("data/bluespiral.png");
 		greenspiral = new Image("data/greenspiral.png");
 		buttons = new Button[10];	
-		buttons[0] = new NewGameButton(Color.blue,Color.red,550,100,"New game");
+		buttons[0] = new NewGameButton(Color.blue,new Color(150,0,255),"New game");
+		buttons[1] = new SelectLevelButton(Color.blue,new Color(150,0,255),"Select Level");
+		buttons[2] = new ExitButton(Color.blue,new Color(150,0,255),"Exit");
 		Font f = new Font("Verdana", Font.BOLD, 45);
 		font = new TrueTypeFont(f, true);
+		int maxWidth = 0;
+		for(Button b : buttons){
+			if(b != null){
+				maxWidth = Math.max(maxWidth, font.getWidth(b.getText()));
+			}
+		}
+		int currY = menuButtonStartY;
+		for(Button b : buttons){
+			if(b != null){
+				System.out.println("For "+b.getText() + " the change is: "+(maxWidth - font.getWidth(b.getText()))/2);
+				System.out.println(maxWidth);
+				System.out.println(font.getWidth(b.getText()));
+				b.setX(menuButtonStartX + (maxWidth - b.font.getWidth(b.getText()))/2 );
+				b.setY(currY);
+				currY += b.font.getHeight(b.getText()) + 10;
+			}
+		}
 		
 	}
 

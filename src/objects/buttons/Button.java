@@ -13,21 +13,21 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 public abstract class Button {
 	protected Color standardColor;
 	protected Color highlightColor;
-	protected TrueTypeFont font;
-	protected TrueTypeFont highlightFont;
-	protected float x;
-	protected float y;
+	public TrueTypeFont font;
+	public TrueTypeFont highlightFont;
+	protected float x = 0;
+	protected float y = 0;
 	protected String text;
 	protected float width;
+
 	protected float height;
 	protected float highlightWidth;
 	protected float highlightHeight;
 	
-	public Button(Color standardColor, Color highlightColor, float x, float y, String text){
+	public Button(Color standardColor, Color highlightColor, String text){
 		this.standardColor = standardColor;
 		this.highlightColor = highlightColor;
-		this.x = x;
-		this.y = y;
+
 		this.text = text;
 		Font normalFont = new Font("Verdana", Font.BOLD, 30);
 		Font highlight = new Font("Verdana", Font.BOLD, 35);
@@ -55,6 +55,28 @@ public abstract class Button {
 	
 	public abstract void onClick(GameContainer gc, Graphics g, StateBasedGame game);
 
-	
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
 
 }
