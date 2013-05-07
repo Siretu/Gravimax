@@ -7,6 +7,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.command.InputProvider;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Transform;
@@ -111,6 +112,13 @@ public class Room {
 			turn = 3;
 		} else {
 			return;
+		}
+		try {
+			Sound fx = new Sound("data/sounds/transform.wav");
+			fx.play(1f,0.1f);
+		} catch (SlickException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		for(GameObject obj : objects){
 			if(obj != null){

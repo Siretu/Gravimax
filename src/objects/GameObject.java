@@ -3,6 +3,8 @@ package objects;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Shape;
 
 public class GameObject {
@@ -168,6 +170,15 @@ public class GameObject {
 	
 	private void jump(int gravityDir) {
 		if(this.canJump) {
+			Sound fx;
+			try {
+				fx = new Sound("data/sounds/jump.wav");
+				fx.play(1f,0.1f);
+			} catch (SlickException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			switch(gravityDir) {
 			case UP: this.y_speed = this.jumpSpeed; break;
 			case DOWN: this.y_speed = -this.jumpSpeed; break;
