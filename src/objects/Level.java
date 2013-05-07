@@ -19,22 +19,37 @@ public class Level {
 	public static final int levelHeight = 80;
 	public static final int levelBorder = 5;
 	
+	public static final int tooltipWidth = 250;
+	public static final int tooltipHeight = 80;
+	public static final int tooltipBorder = 5;
+	public static final int tooltipTextGap = 10;
+	
 	private String levelPath;
 	private int level;
 	private float x;
 	private float y;
 	private Color c;
+	private boolean showTooltip;
+	
+	private String highscore;
+	private String lastTry;
 	
 	private TrueTypeFont font;
+	private TrueTypeFont highscoreFont;
 	
-	public Level(String filename, float x, float y, Color c, int level){
+	public Level(String filename, float x, float y, Color c, int level, String highscore, String lastTry){
 		this.levelPath = filename;
 		this.x = x;
 		this.y = y;
 		this.c = c;
 		this.level = level;
+		this.highscore = highscore;
+		this.lastTry = lastTry;
+		this.showTooltip = false;
 		Font f = new Font("Verdana", Font.BOLD, 45);
 		font = new TrueTypeFont(f, true);
+		Font f2 = new Font("Verdana", Font.BOLD, 15);
+		highscoreFont = new TrueTypeFont(f2, true);
 	}
 	
 	public void onRender(GameContainer gc, Graphics g, StateBasedGame game){
@@ -49,6 +64,7 @@ public class Level {
 			if(gc.getInput().isMousePressed(0)){
 				this.onClick(gc,g,game);
 			}
+			
 		}
 		g.setColor(c);
 		g.fillRoundRect(x,y,levelWidth * scale,levelHeight * scale,10);
@@ -58,6 +74,24 @@ public class Level {
 		
 		if(scaled){
 			g.translate((scale-1) * levelWidth / 2,(scale-1) * levelHeight / 2);
+			showTooltip = true;
+		} else {
+			showTooltip = false;
+		}
+	}
+	
+	public void onHover(GameContainer gc, Graphics g, StateBasedGame game){
+		if(showTooltip){
+			int mouseX = gc.getInput().getMouseX();
+			int mouseY = gc.getInput().getMouseY();
+			int startX = mouseX+levelWidth/2;
+			int startY = mouseY+levelHeight/2;
+			g.setColor(Color.black);
+			g.fillRect(startX, startY, tooltipWidth, tooltipHeight);
+			g.setColor(Color.white);
+			g.fillRect(startX+tooltipBorder, startY+tooltipBorder, tooltipWidth-tooltipBorder*2, tooltipHeight-tooltipBorder*2);
+			highscoreFont.drawString(startX + tooltipTextGap, startY + tooltipTextGap, "Highscore: "+ highscore,Color.black);
+			highscoreFont.drawString(startX + tooltipTextGap, startY + 2 * tooltipTextGap + highscoreFont.getHeight("Highscore"), "Last try: "+ lastTry,Color.black);
 		}
 	}
 	

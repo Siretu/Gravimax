@@ -1,5 +1,9 @@
 package objects;
 
+import java.awt.Font;
+
+import main.Stopwatch;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -8,6 +12,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.command.InputProvider;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Transform;
@@ -45,6 +50,10 @@ public class Room {
 	
 	public StateBasedGame game;
 	
+	public Stopwatch timer;
+	
+	private TrueTypeFont font;
+	
 	public Room(Color c, float friction, float gravity){
 		this.background = c;
 		this.friction = friction;
@@ -59,6 +68,13 @@ public class Room {
 	}
 	
 	public void onInit(GameContainer gc, StateBasedGame game) throws SlickException {
+		timer = new Stopwatch();
+		timer.start();
+		
+		Font f = new Font("Verdana",Font.BOLD,40);
+		font = new TrueTypeFont(f,true);
+		
+		
 		Image img = new Image("data/test_particle.png");
 		particleSystem = new ParticleSystem(img, 1500);
 		gcWidth = gc.getWidth();
@@ -92,6 +108,8 @@ public class Room {
 				go.onRender(g);
 			}
 		}
+		String time = timer.toString();
+		font.drawString(400 - font.getWidth(time)/2, 0, time,Color.black);
 		particleSystem.render();
 	}
 	
@@ -117,7 +135,6 @@ public class Room {
 			Sound fx = new Sound("data/sounds/transform.wav");
 			fx.play(1f,0.1f);
 		} catch (SlickException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for(GameObject obj : objects){

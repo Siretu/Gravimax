@@ -1,11 +1,18 @@
 package objects;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import main.Game;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.transition.FadeInTransition;
@@ -72,7 +79,57 @@ public class Player extends GameObject {
 	}
 	
 	protected void completeLevel(Room room){
-		String level = "" + (Integer.parseInt(((Game)room.game).getLevel()) + 1);
+		room.timer.stop();
+		try {
+			Sound fx = new Sound("data/sounds/changelevel.wav");
+			fx.play(1f,0.2f);
+		} catch (SlickException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int l = Integer.parseInt(((Game)room.game).getLevel());
+		BufferedReader file = null;
+		BufferedWriter bw = null;
+		FileWriter fw = null;
+		String highscore;
+		String currentTry = "" + (int)room.timer.milliseconds();
+		String lastTry = currentTry;
+		try {
+			File score = new File("data/maps/level"+l+".score");
+			if (!score.exists()) {
+				score.createNewFile();
+				highscore = currentTry;
+			} else {
+				file = new BufferedReader(new FileReader("data/maps/"+score.getName()));
+				highscore = file.readLine();
+				file.close();
+				if(Integer.parseInt(highscore) > (int) room.timer.milliseconds()){
+					highscore = currentTry;
+				}
+			}
+			
+			fw = new FileWriter(score.getAbsoluteFile());
+			bw = new BufferedWriter(fw);
+			bw.write(highscore);
+			bw.newLine();
+			bw.write(lastTry);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally{
+			try{
+				if(bw != null){
+					bw.close();
+				}
+				if(file != null){
+					file.close();
+				}
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+		}
+		
+		String level = "" + (l + 1);
 		File f = new File("data/maps/level"+level+".map");
 		if(f.exists()){
 			((Game)room.game).setLevel(level);
