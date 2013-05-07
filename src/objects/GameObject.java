@@ -227,6 +227,8 @@ public class GameObject {
 	
 	protected void die(Room room){}
 	
+	protected void onRotation(Room room){}
+	
 	public void onRender(Graphics g){
 		this.shape.setCenterX(this.x);
 		this.shape.setCenterY(this.y);

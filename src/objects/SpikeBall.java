@@ -49,6 +49,7 @@ public class SpikeBall extends GameObject{
 			}
 		}
 	}
+
 	
 	public void onRender(Graphics g){
 		this.shape.setCenterX(this.x);

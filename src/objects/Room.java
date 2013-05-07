@@ -139,6 +139,7 @@ public class Room {
 		}
 		for(GameObject obj : objects){
 			if(obj != null){
+				obj.onRotation(this);
 				obj.setSpeedX(0);
 				obj.setSpeedY(0);
 				if(turn == 2){
