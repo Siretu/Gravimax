@@ -55,7 +55,6 @@ public class GameObject {
 		
 		public boolean has(int n) {
 			int temp = flag & n;
-//			System.out.println(temp);
 			if(temp == n)
 				return true;
 			return false;
@@ -90,7 +89,6 @@ public class GameObject {
 	public void onUpdate(Room room) {
 		if(this.flag.has(OBJECT_FLAG_MAPONLY)) 
 			return;
-//		System.out.println(Arrays.toString(room.getObjects()));
 		this.checkJumpStatus(room.getObjects());
 		this.handleInput(room.getGravityDir(), room.getGravity());
 		this.onMove(room);
@@ -263,8 +261,11 @@ public class GameObject {
 	public boolean collideLeft(GameObject obj){
 		if( (x - shape.getWidth() / 2 <= obj.getX() + obj.shape.getWidth() / 2) &&
 			(x + shape.getWidth() / 2 >= obj.getX()) && 
-			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 10) && 
-			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2)) {
+			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2) && 
+			(y - shape.getHeight() / 2 < obj.getY() + obj.shape.getHeight() / 2) &&
+			Math.min((Math.abs(obj.shape.getCenterY() + obj.shape.getHeight()/2 - y + shape.getHeight()/2)),
+					(Math.abs(obj.shape.getCenterY() - obj.shape.getHeight() / 2 - y - shape.getHeight() /2 )))>
+					Math.abs(obj.shape.getCenterX() + obj.shape.getWidth()/2 - x + shape.getWidth() / 2)){
 			return true;
 		} else {
 			return false;
@@ -278,8 +279,11 @@ public class GameObject {
 	public boolean collideRight(GameObject obj){
 		if( (x - shape.getWidth() / 2 <= obj.getX()) && 
 			(x + shape.getWidth() / 2 >= obj.getX() - obj.shape.getWidth() / 2) && 
-			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2 + 10) && 
-			(y - shape.getHeight() / 2 + 5 < obj.getY() + obj.shape.getHeight() / 2)) {
+			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2) && 
+			(y - shape.getHeight() / 2 < obj.getY() + obj.shape.getHeight() / 2) &&
+			Math.min((Math.abs(obj.shape.getCenterY() - obj.shape.getHeight() / 2 - y - shape.getHeight()/2)),
+					(Math.abs(obj.shape.getCenterY() + obj.shape.getHeight() / 2 - y + shape.getHeight() / 2)))>
+					Math.abs(obj.shape.getCenterX() - obj.shape.getWidth() / 2 - x - shape.getWidth() / 2)){
 			return true;
 		} else {
 			return false;
@@ -291,10 +295,13 @@ public class GameObject {
 	 * @return true if this collides with obj from below, false otherwise.
 	 */
 	public boolean collideDown(GameObject obj){
-		if( (x + shape.getWidth() / 2 > obj.getX() - obj.shape.getWidth() / 2 + 10) && 
-			(x - shape.getWidth() / 2 + 5< obj.getX() + obj.shape.getWidth() / 2) && 
-			(y - shape.getHeight() / 2 < obj.getY() ) && 
-			(y + shape.getHeight() / 2 > obj.getY() - obj.shape.getHeight() / 2)){
+		if( (x + shape.getWidth() / 2 > obj.shape.getCenterX() - obj.shape.getWidth() / 2) && 
+			(x - shape.getWidth() / 2 < obj.shape.getCenterX() + obj.shape.getWidth() / 2) && 
+			(y - shape.getHeight() / 2 < obj.shape.getCenterY() ) && 
+			(y + shape.getHeight() / 2 > obj.shape.getCenterY() - obj.shape.getHeight() / 2) &&
+			(Math.abs(obj.shape.getCenterY() - obj.shape.getHeight() / 2 - y - shape.getHeight()/2) <
+					Math.min(Math.abs(obj.shape.getCenterX() + obj.shape.getWidth() / 2 - x + shape.getWidth() / 2),
+							Math.abs(obj.shape.getCenterX() - obj.shape.getWidth() / 2 - x - shape.getWidth() / 2)))){
 			return true;
 		} else {
 			return false;
@@ -306,10 +313,13 @@ public class GameObject {
 	 * @return true if this collides with obj from above, false otherwise.
 	 */
 	public boolean collideUp(GameObject obj){
-		if( (x + shape.getWidth() / 2 > obj.getX() - obj.shape.getWidth() / 2 + 10) && 
-			(x - shape.getWidth() / 2 + 5 < obj.getX() + obj.shape.getWidth() / 2) && 
+		if( (x + shape.getWidth() / 2 > obj.getX() - obj.shape.getWidth() / 2) && 
+			(x - shape.getWidth() / 2 < obj.getX() + obj.shape.getWidth() / 2) && 
 			(y - shape.getHeight() / 2 < obj.getY() + obj.shape.getHeight() / 2) && 
-			(y + shape.getHeight() / 2 > obj.getY())){
+			(y + shape.getHeight() / 2 > obj.getY()) &&
+			(Math.abs(obj.shape.getCenterY() + obj.shape.getHeight() / 2 - y + shape.getHeight()/2) <
+					Math.min(Math.abs(obj.shape.getCenterX() + obj.shape.getWidth() / 2 - x + shape.getWidth() / 2),
+							Math.abs(obj.shape.getCenterX() - obj.shape.getWidth() / 2 - x - shape.getWidth() / 2)))){
 			return true;
 		} else {
 			return false;

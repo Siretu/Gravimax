@@ -226,11 +226,9 @@ public class Room {
 	}
 	
 	public void addObject(GameObject obj){
-		System.out.println("Tried to add object");
 		for(int i = 0; i<objects.length;i++){
 			if(objects[i] == null){
 				objects[i] = obj;
-				System.out.println("Added object");
 				return;
 			}
 		}
