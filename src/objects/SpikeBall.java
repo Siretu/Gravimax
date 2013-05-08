@@ -13,7 +13,7 @@ public class SpikeBall extends GameObject{
 	public SpikeBall(Shape s, Color c) {
 		super(s, c);
 		try {
-			spikeImg = new Image("data/spikeball.png");
+			spikeImg = new Image("data/images/spikeball.png");
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}

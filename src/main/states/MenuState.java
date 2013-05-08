@@ -35,9 +35,9 @@ public class MenuState extends BasicGameState{
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		rotation = 5;
-		redspiral = new Image("data/redspiral.png");
-		bluespiral = new Image("data/bluespiral.png");
-		greenspiral = new Image("data/greenspiral.png");
+		redspiral = new Image("data/images/redspiral.png");
+		bluespiral = new Image("data/images/bluespiral.png");
+		greenspiral = new Image("data/images/greenspiral.png");
 		buttons = new Button[10];	
 		buttons[0] = new NewGameButton(Color.blue,new Color(150,0,255),"New game");
 		buttons[1] = new SelectLevelButton(Color.blue,new Color(150,0,255),"Select Level");

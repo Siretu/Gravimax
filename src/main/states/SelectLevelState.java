@@ -43,7 +43,6 @@ public class SelectLevelState extends BasicGameState{
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		onInput(gc,game);
-		Color[] colors = {Color.red, Color.blue, Color.green, Color.yellow};
 		
 		File dir = new File("data/maps");
 		File[] foundFiles = dir.listFiles(new FilenameFilter() {
@@ -57,11 +56,12 @@ public class SelectLevelState extends BasicGameState{
 		int currX = startLevelX;
 		int currY = startLevelY;
 		int currIndex = 0;
-		
+		int lastComplete = 0;
 		for(File f : foundFiles){
 			BufferedReader reader = null;
 			String highscore = "";
 			String lastTry = "";
+			Color c = Color.red;
 			try {
 				String name = "data/maps/"+f.getName().split("\\.")[0] + ".score";
 				File score = new File(name);
@@ -70,6 +70,8 @@ public class SelectLevelState extends BasicGameState{
 					reader = new BufferedReader(new FileReader(name));
 					highscore = Stopwatch.toString(Integer.parseInt(reader.readLine()));
 					lastTry = Stopwatch.toString(Integer.parseInt(reader.readLine()));
+					lastComplete++;
+					c = Color.green;
 				} else {
 					highscore = "None";
 					lastTry = "None";
@@ -85,7 +87,11 @@ public class SelectLevelState extends BasicGameState{
 					System.err.printf("%s%n in MapReader", e);
 				}
 			}
-			levels[currIndex] = new Level(f.getName(), currX, currY,colors[currIndex % colors.length],currIndex+1,highscore,lastTry);
+			
+			if(currIndex == lastComplete || (currIndex == 0 && !c.equals(Color.green))){
+				c = Color.blue;
+			}
+			levels[currIndex] = new Level(f.getName(), currX, currY,c,currIndex+1,highscore,lastTry);
 			currIndex++;
 			currX += levelGap + Level.levelWidth;
 			if(currX+Level.levelWidth > gc.getWidth() - startLevelX){

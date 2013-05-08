@@ -5,6 +5,8 @@ import java.awt.Font;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.geom.Shape;
@@ -23,6 +25,11 @@ public class Level {
 	public static final int tooltipHeight = 80;
 	public static final int tooltipBorder = 5;
 	public static final int tooltipTextGap = 10;
+	
+	public static final Color levelLocked = Color.red;
+	public static final Color levelComplete = Color.green;
+	public static final Color levelUnlocked = Color.blue;
+	
 	
 	private String levelPath;
 	private int level;
@@ -57,7 +64,7 @@ public class Level {
 		float mouseX = gc.getInput().getMouseX();
 		float mouseY = gc.getInput().getMouseY();
 		boolean scaled = false;
-		if(mouseX >= x && mouseX <= x + levelWidth && mouseY >= y && mouseY <= y+levelHeight){
+		if(mouseX >= x && mouseX <= x + levelWidth && mouseY >= y && mouseY <= y+levelHeight && !c.equals(levelLocked)){
 			scale = 1.1f;
 			g.translate(-(scale-1) * levelWidth / 2,-(scale-1) * levelHeight / 2);
 			scaled = true;
@@ -70,7 +77,16 @@ public class Level {
 		g.fillRoundRect(x,y,levelWidth * scale,levelHeight * scale,10);
 		g.setColor(Color.lightGray);
 		g.fillRoundRect(x+levelBorder,y+levelBorder,(levelWidth * scale - levelBorder * 2),(levelHeight * scale - levelBorder * 2),10);
-		font.drawString(x+(levelWidth * scale - font.getWidth(""+level))/2, y + (levelHeight* scale - font.getHeight(""+level))/2, ""+level,c);
+		if(!c.equals(levelLocked)){
+			font.drawString(x+(levelWidth * scale - font.getWidth(""+level))/2, y + (levelHeight* scale - font.getHeight(""+level))/2, ""+level,c);	
+		} else {
+			try {
+				Image lock = new Image("data/images/lock.png");
+				lock.draw(x + (levelWidth - lock.getWidth()) / 2, y + (levelHeight - lock.getHeight()) / 2);
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		if(scaled){
 			g.translate((scale-1) * levelWidth / 2,(scale-1) * levelHeight / 2);
@@ -114,5 +130,13 @@ public class Level {
 
 	public void setLastTry(String lastTry) {
 		this.lastTry = lastTry;
+	}
+
+	public Color getC() {
+		return c;
+	}
+
+	public void setC(Color c) {
+		this.c = c;
 	}
 }

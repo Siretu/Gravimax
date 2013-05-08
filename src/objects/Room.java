@@ -76,7 +76,7 @@ public class Room {
 		font = new TrueTypeFont(f,true);
 		
 		
-		Image img = new Image("data/test_particle.png");
+		Image img = new Image("data/images/test_particle.png");
 		particleSystem = new ParticleSystem(img, 1500);
 		gcWidth = gc.getWidth();
 		gcHeight = gc.getHeight();

@@ -15,7 +15,7 @@ public class Spikes extends GameObject{
 	public Spikes(Shape s, Color c) {
 		super(s, c);
 		try {
-			spikeImg = new Image("data/spikes.png");
+			spikeImg = new Image("data/images/spikes.png");
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}

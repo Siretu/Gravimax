@@ -136,8 +136,12 @@ public class Player extends GameObject {
 			}
 		}
 		Level[] levels = ((SelectLevelState)room.game.getState(4)).levels;
-		levels[Integer.parseInt(((Game)room.game).getLevel())-1].setLastTry(Stopwatch.toString(Integer.parseInt(lastTry)));
-		levels[Integer.parseInt(((Game)room.game).getLevel())-1].setHighscore(Stopwatch.toString(Integer.parseInt(highscore)));
+		levels[l-1].setLastTry(Stopwatch.toString(Integer.parseInt(lastTry)));
+		levels[l-1].setHighscore(Stopwatch.toString(Integer.parseInt(highscore)));
+		levels[l-1].setC(Color.green);
+		if(l<levels.length && !levels[l].getC().equals(Color.green)){
+			levels[l].setC(Color.blue);
+		}
 		
 		String level = "" + (l + 1);
 		File f = new File("data/maps/level"+level+".map");
