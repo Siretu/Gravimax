@@ -26,11 +26,11 @@ public class GameObject {
 	protected boolean moveLeft = false;
 	protected boolean moveRight = false;
 	
-	protected static final int OBJECT_FLAG_GRAVITY = 0x00000001;
-	protected static final int OBJECT_FLAG_GHOST = 0x00000002;
-	protected static final int OBJECT_FLAG_MAPONLY = 0x00000004;
-	protected static final int OBJECT_FLAG_GOAL = 0x00000008;
-	protected static final int OBJECT_FLAG_HOSTILE = 0x00000010;
+	protected static final int OBJECT_FLAG_GRAVITY = 	0b00000001;
+	protected static final int OBJECT_FLAG_GHOST = 		0b00000010;
+	protected static final int OBJECT_FLAG_MAPONLY = 	0b00000100;
+	protected static final int OBJECT_FLAG_GOAL = 		0b00010000;
+	protected static final int OBJECT_FLAG_HOSTILE = 	0b00100000;
 	
 	protected static final int UP = 10;
 	protected static final int LEFT = 11;
@@ -49,7 +49,7 @@ public class GameObject {
 	 *
 	 */
 	public class Flags {
-		int flag = 0x00000000;
+		int flag = 0b00000000;
 		
 		Flags() {}
 		
@@ -150,20 +150,22 @@ public class GameObject {
 		
 		this.checkCollisions(room);
 	
-		if(gravityDir == UP || gravityDir == DOWN) {
-			this.x_speed *= room.getFriction();
-			if(gravityDir == UP) {
-				this.y_speed -= gravity;
-			} else {
-				this.y_speed += gravity;
+		if(this.flag.has(OBJECT_FLAG_GRAVITY)) {
+			if(gravityDir == UP || gravityDir == DOWN) {
+				this.x_speed *= room.getFriction();
+				if(gravityDir == UP) {
+					this.y_speed -= gravity;
+				} else {
+					this.y_speed += gravity;
+				}
 			}
-		}
-		if(gravityDir == LEFT || gravityDir == RIGHT) {
-			this.y_speed *= room.getFriction();
-			if(gravityDir == LEFT) {
-				this.x_speed -= gravity;
-			} else {
-				this.x_speed += gravity;
+			if(gravityDir == LEFT || gravityDir == RIGHT) {
+				this.y_speed *= room.getFriction();
+				if(gravityDir == LEFT) {
+					this.x_speed -= gravity;
+				} else {
+					this.x_speed += gravity;
+				}
 			}
 		}
 		
@@ -227,7 +229,7 @@ public class GameObject {
 	
 	protected void die(Room room){}
 	
-	protected void onRotation(Room room){}
+	protected void onRotation(int turn){}
 	
 	public void onRender(Graphics g){
 		this.shape.setCenterX(this.x);

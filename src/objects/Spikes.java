@@ -27,22 +27,19 @@ public class Spikes extends GameObject{
 		height = (int) shape.getHeight();
 	}
 	
-	protected void onRotation(Room room){
-		System.out.println("Rotated image");
-		spikeImg.rotate(-90);
-		int oldHeight = height;
-		height = width;
-		width = oldHeight;
-		System.out.println("Width: "+width);
-		System.out.println("Height: " + height);
+	protected void onRotation(int turn){
+		if(turn == 2) {
+			spikeImg.rotate(180);
+		} else if(turn == 1) {
+			spikeImg.rotate(-90);
+		} else if(turn == 3) {
+			spikeImg.rotate(90);
+		}
 	}
 	
 	public void onRender(Graphics g){
 		this.shape.setCenterX(this.x);
 		this.shape.setCenterY(this.y);
-		g.draw(shape);
-		System.out.println("Width: "+width);
-		System.out.println("Height: " + height);
 		spikeImg.draw(x-width/2,y-height/2,width,height);
 	}
 

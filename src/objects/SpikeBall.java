@@ -20,6 +20,7 @@ public class SpikeBall extends GameObject{
 //		this.flag.add(OBJECT_FLAG_MAPONLY);
 		this.flag.add(OBJECT_FLAG_HOSTILE);
 		this.flag.add(OBJECT_FLAG_GHOST);
+		this.flag.add(OBJECT_FLAG_GRAVITY);
 	}
 	
 	@Override

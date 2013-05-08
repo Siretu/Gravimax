@@ -21,6 +21,7 @@ public class Goal extends GameObject {
 			e.printStackTrace();
 		}
 		this.flag.add(OBJECT_FLAG_MAPONLY);
+		this.flag.add(OBJECT_FLAG_GHOST);
 		this.flag.add(OBJECT_FLAG_GOAL);
 		
 	}
