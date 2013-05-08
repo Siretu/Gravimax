@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import main.Game;
+import main.Stopwatch;
+import main.states.SelectLevelState;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -96,7 +98,7 @@ public class Player extends GameObject {
 		BufferedReader file = null;
 		BufferedWriter bw = null;
 		FileWriter fw = null;
-		String highscore;
+		String highscore = null;
 		String currentTry = "" + (int)room.timer.milliseconds();
 		String lastTry = currentTry;
 		try {
@@ -133,6 +135,9 @@ public class Player extends GameObject {
 				e.printStackTrace();
 			}
 		}
+		Level[] levels = ((SelectLevelState)room.game.getState(4)).levels;
+		levels[Integer.parseInt(((Game)room.game).getLevel())-1].setLastTry(Stopwatch.toString(Integer.parseInt(lastTry)));
+		levels[Integer.parseInt(((Game)room.game).getLevel())-1].setHighscore(Stopwatch.toString(Integer.parseInt(highscore)));
 		
 		String level = "" + (l + 1);
 		File f = new File("data/maps/level"+level+".map");

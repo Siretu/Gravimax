@@ -65,6 +65,7 @@ public class Room {
 		this.background = new Color(130,130,130);
 		this.friction = 0.88f;
 		this.gravity = 0.5f;
+		
 	}
 	
 	public void onInit(GameContainer gc, StateBasedGame game) throws SlickException {

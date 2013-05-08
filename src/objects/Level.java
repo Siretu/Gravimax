@@ -99,4 +99,20 @@ public class Level {
 		((Game)game).setLevel("" + level);
 		game.enterState(1, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
 	}
+
+	public String getHighscore() {
+		return highscore;
+	}
+
+	public void setHighscore(String highscore) {
+		this.highscore = highscore;
+	}
+
+	public String getLastTry() {
+		return lastTry;
+	}
+
+	public void setLastTry(String lastTry) {
+		this.lastTry = lastTry;
+	}
 }

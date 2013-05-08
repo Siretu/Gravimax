@@ -33,15 +33,15 @@ public class SelectLevelState extends BasicGameState{
 	public static final int startLevelY = 100;
 	public static final int levelGap = 20;
 	
-	private Level[] levels;
+	public Level[] levels;
 
 	@Override
-	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
+	public void enter(GameContainer gc, StateBasedGame game) throws SlickException {
 		
 	}
 	
 	@Override
-	public void enter(GameContainer gc, StateBasedGame game) throws SlickException {
+	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		onInput(gc,game);
 		Color[] colors = {Color.red, Color.blue, Color.green, Color.yellow};
 		
