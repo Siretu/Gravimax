@@ -16,7 +16,7 @@ public class Goal extends GameObject {
 	public Goal(Shape s, Color c){
 		super(s, c);
 		try {
-			goal = new Image("data/image/redspiral.png");
+			goal = new Image("data/images/redspiral.png");
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
