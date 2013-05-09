@@ -84,9 +84,12 @@ public class GameState extends BasicGameState{
 		    public void keyPressed(int key, char c) {
 		    	switch(key) {
 		    	case Input.KEY_A: r.getObjects()[0].moveLeft(); break;
+		    	case Input.KEY_LEFT: r.getObjects()[0].moveLeft(); break;
 		    	case Input.KEY_D: r.getObjects()[0].moveRight(); break;
+		    	case Input.KEY_RIGHT: r.getObjects()[0].moveRight(); break;
 		    	case Input.KEY_W: r.getObjects()[0].tryJump(r.getGravityDir()); break;
 		    	case Input.KEY_SPACE: r.getObjects()[0].tryJump(r.getGravityDir()); break;
+		    	case Input.KEY_UP: r.getObjects()[0].tryJump(r.getGravityDir()); break;
 		    	case Input.KEY_ESCAPE: game.enterState(3, new FadeOutTransition(Color.black), new FadeInTransition(Color.black)); break;
 		    	case Input.KEY_TAB: game.enterState(1, new FadeOutTransition(Color.red), new FadeInTransition(Color.red));
 		    	default: break;
@@ -98,6 +101,8 @@ public class GameState extends BasicGameState{
 		    	switch(key) {
 		    	case Input.KEY_A: r.getObjects()[0].stopLeft(); break;
 		    	case Input.KEY_D: r.getObjects()[0].stopRight(); break;
+		    	case Input.KEY_LEFT: r.getObjects()[0].stopLeft(); break;
+		    	case Input.KEY_RIGHT: r.getObjects()[0].stopRight(); break;
 		    	default: break;
 		    	}
 		    }

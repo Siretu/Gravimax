@@ -1,0 +1,12 @@
+15
+player:200:680:50:50
+goal:650:680
+map:375:400:50:150:red
+map:375:650:50:100:red
+map:200:540:50:50:yellow
+map:50:300:300:50:red
+map:550:150:80:200:green
+spikeball:375:350
+spikeball:325:700
+spikeball:375:600
+spikes:550:110

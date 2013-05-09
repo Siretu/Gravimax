@@ -1,0 +1,17 @@
+53
+player:625:600:50:50
+goal:60:60
+map:100:200:225:130:blue
+map:395:200:10:400:yellow
+map:475:200:225:130:blue
+map:100:470:225:130:blue
+map:475:470:225:130:blue
+map:100:395:600:10:yellow
+map:50:600:50:50:black
+map:700:150:50:50:black
+map:475:600:50:150:red
+map:275:600:50:50:black
+spikes:395:710
+spikeball:50:50
+spikeball:100:420
+spikeball:650:150

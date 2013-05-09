@@ -32,7 +32,7 @@ public class Level {
 	
 	
 	private String levelPath;
-	private int level;
+	private String level;
 	private float x;
 	private float y;
 	private Color c;
@@ -44,7 +44,7 @@ public class Level {
 	private TrueTypeFont font;
 	private TrueTypeFont highscoreFont;
 	
-	public Level(String filename, float x, float y, Color c, int level, String highscore, String lastTry){
+	public Level(String filename, float x, float y, Color c, String level, String highscore, String lastTry){
 		this.levelPath = filename;
 		this.x = x;
 		this.y = y;
@@ -78,7 +78,7 @@ public class Level {
 		g.setColor(Color.lightGray);
 		g.fillRoundRect(x+levelBorder,y+levelBorder,(levelWidth * scale - levelBorder * 2),(levelHeight * scale - levelBorder * 2),10);
 		if(!c.equals(levelLocked)){
-			font.drawString(x+(levelWidth * scale - font.getWidth(""+level))/2, y + (levelHeight* scale - font.getHeight(""+level))/2, ""+level,c);	
+			font.drawString(x+(levelWidth * scale - font.getWidth(level))/2, y + (levelHeight* scale - font.getHeight(level))/2, level,c);	
 		} else {
 			try {
 				Image lock = new Image("data/images/lock.png");
@@ -112,7 +112,7 @@ public class Level {
 	}
 	
 	public void onClick(GameContainer gc, Graphics g, StateBasedGame game){
-		((Game)game).setLevel("" + level);
+		((Game)game).setLevel(level);
 		game.enterState(1, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
 	}
 

@@ -95,6 +95,12 @@ public class Player extends GameObject {
 			e.printStackTrace();
 		}
 		int l = Integer.parseInt(((Game)room.game).getLevel());
+		String level = "" + l;
+		if(l < 10){
+			System.out.println("Added a zero");
+			level = "0" + (l);
+		}
+		System.out.println("Level: "+ level);
 		BufferedReader file = null;
 		BufferedWriter bw = null;
 		FileWriter fw = null;
@@ -102,7 +108,8 @@ public class Player extends GameObject {
 		String currentTry = "" + (int)room.timer.milliseconds();
 		String lastTry = currentTry;
 		try {
-			File score = new File("data/maps/level"+l+".score");
+			
+			File score = new File("data/maps/level"+level+".score");
 			if (!score.exists()) {
 				score.createNewFile();
 				highscore = currentTry;
@@ -142,8 +149,12 @@ public class Player extends GameObject {
 		if(l<levels.length && !levels[l].getC().equals(Color.green)){
 			levels[l].setC(Color.blue);
 		}
+		level = "" + (l+1);
+		if(l + 1 < 10){
+			System.out.println("Added a zero");
+			level = "0" + (l+1);
+		}
 		
-		String level = "" + (l + 1);
 		File f = new File("data/maps/level"+level+".map");
 		if(f.exists()){
 			((Game)room.game).setLevel(level);

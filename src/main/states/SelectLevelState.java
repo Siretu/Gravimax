@@ -91,7 +91,11 @@ public class SelectLevelState extends BasicGameState{
 			if(currIndex == lastComplete || (currIndex == 0 && !c.equals(Color.green))){
 				c = Color.blue;
 			}
-			levels[currIndex] = new Level(f.getName(), currX, currY,c,currIndex+1,highscore,lastTry);
+			String level = ""+(currIndex+1);
+			if(currIndex+1 < 10){
+				level = "0"+(currIndex+1);
+			}
+			levels[currIndex] = new Level(f.getName(), currX, currY,c,level,highscore,lastTry);
 			currIndex++;
 			currX += levelGap + Level.levelWidth;
 			if(currX+Level.levelWidth > gc.getWidth() - startLevelX){
